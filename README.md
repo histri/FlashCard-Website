@@ -14,4 +14,7 @@ useful features are locked behind paywalls. This is my attempt at making somethi
 Since this is a learning project no LLMs were used to write any lines of code.
 
 # Progress Tracker
+
+May 28th
 * project will use an MVC architecture
+* I am not sure whether to have a split of Notebook/Courses doing that for now might change later 
