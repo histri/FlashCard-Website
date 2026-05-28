@@ -1,0 +1,17 @@
+---
+title: FlashCard Study Tool
+author: Andrii Vdovyniuk
+date: May 28th
+---
+
+# Overview
+This is a personal study project I am making to learn more about software development.
+
+
+The motivation for this project was the sorry state of flashcard apps right now. Most of them require making accounts, have limits on the number of cards you can make,
+useful features are locked behind paywalls. This is my attempt at making something better
+
+Since this is a learning project no LLMs were used to write any lines of code.
+
+# Progress Tracker
+* project will use an MVC architecture
