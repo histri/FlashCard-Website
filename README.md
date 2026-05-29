@@ -17,4 +17,7 @@ Since this is a learning project no LLMs were used to write any lines of code.
 
 May 28th
 * project will use an MVC architecture
-* I am not sure whether to have a split of Notebook/Courses doing that for now might change later 
+* I am not sure whether to have a split of Notebook/Courses doing that for now might change later
+* Set up basic elements and some code, currently doesn't compile
+* The next goal is to set up the view/notifier for all the basic building blocks of the website
+* 
