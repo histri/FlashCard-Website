@@ -15,6 +15,8 @@ export default class NoteView {
         //tie controller and model object to this specific view
         this.#note = note;
         this.#controller = controller;
+        //register the view as a listener to the Domain class
+
         this.#title = document.createElement("h2");
         this.#title.textContent = "Flash Card Study Tool";
         //Todo, need to add a <div> or article element to group things better instead of uppending one at a time.

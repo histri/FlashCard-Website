@@ -6,9 +6,16 @@ import NoteView from "../view/notebook-view.ts";
 export default class NotebookController {
 
     #notebook: NoteBook;
-    #notebokView: NoteView;
+    #notebookView: NoteView;
     constructor() {
         this.#notebook = new NoteBook();
+        this.#notebookView = new NoteView(this.#notebook, this);
+
+    }
+
+    //Adds a new deck to the current notebook
+    //Decks hold flashcards, currently decks property is only its name
+    addDeck(): void {
 
     }
 }
