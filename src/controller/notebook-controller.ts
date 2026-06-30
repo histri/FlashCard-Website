@@ -16,6 +16,6 @@ export default class NotebookController {
     //Adds a new deck to the current notebook
     //Decks hold flashcards, currently decks property is only its name
     addDeck(): void {
-
+        //NEw view?
     }
 }
