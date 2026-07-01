@@ -9,7 +9,7 @@ export default class NoteView {
     #controller: NotebookController
     #note: NoteBook;
     #title: HTMLHeadingElement;
-    #addDeckBtn: HTMLButtonElement;
+    #addDeckDialog: HTMLDialogElement;
     #selectDeck: HTMLSelectElement;
 
     constructor(note: NoteBook, controller: NotebookController) {
@@ -21,14 +21,38 @@ export default class NoteView {
         this.#title = document.createElement("h2");
         this.#title.textContent = "Flash Card Study Tool";
         //Todo, need to add a <div> or article element to group things better instead of uppending one at a time.
+        this.#addDeckDialog = document.createElement("dialog");
+        this.#addDeckDialog.id = "notebook-add-deck";
+        //TODO vulnerable to XSS attacks
+        this.#addDeckDialog.innerHTML = `
+            <p>Enter name of the new Deck</p>
+            <label for="nickname">Nickname</label>
+           <input type="text" id="nickname" />
+           <button>Add New Deck</button>
+           <button>Close</button>
+        `
+        //TODO need to attach an even listener to the "add deck" button
+        //TODO the dialog shows up immediatly need it to shop up only on press of a button
 
-        this.#addDeckBtn = document.createElement("button");
-        this.#addDeckBtn.textContent = "Add a new Deck";
-        this.#addDeckBtn.addEventListener("click", () => this.#controller.addDeck());
+        // add to the page:
+        document.body.appendChild(this.#addDeckDialog);
+        // dialogs are hidden by default, show yourself:
+        this.#addDeckDialog.show();
+        //example taken from Comp 2452
+//         this.#dialog = document.createElement("dialog");
+//         this.#dialog.id = "add-pokemon-dialog";
+//         this.#dialog.innerHTML = `
+//       <span id="error"></span><br />
+//       <label for="initialHp">Initial HP</label>
+//       <input type="number" id="initialHp" />
+//       <label for="nickname">Nickname</label>
+//       <input type="text" id="nickname" />
+//       <button>Add Pok&eacute;mon</button>
+// `
         //TODO add an event listener to this
 
         document.body.appendChild(this.#title);
-        document.body.appendChild(this.#addDeckBtn);
+
     }
 
     notify(): void{

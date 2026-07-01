@@ -20,4 +20,4 @@ May 28th
 * I am not sure whether to have a split of Notebook/Courses doing that for now might change later
 * Set up basic elements and some code, currently doesn't compile
 * The next goal is to set up the view/notifier for all the basic building blocks of the website
-* 
+* Did more research on imperative and declarative programming regarding the DOM and TS in general still struggling with intuition on which to choose
