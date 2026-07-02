@@ -4,6 +4,7 @@
 //TODO currently when pressing the add deck button the dialog is unable to open again
 import NotebookController from "../controller/notebook-controller.ts";
 import type NoteBook from "../model/NoteBook.ts";
+import {InvalidNameException} from "../model/exceptions.ts";
 
 export default class NoteView {
     #controller: NotebookController
@@ -72,6 +73,9 @@ export default class NoteView {
     }
 
     notify(): void{
+        //TODO Important for main screen
+        //Now want to display all the Decks we have with some basic info about then
+        //and with a button to open that deck
 
     }
 
@@ -81,10 +85,19 @@ export default class NoteView {
         try{
             this.#controller.addDeck(name);
             //assuming success remove the dialog from the page
-            document.body.removeChild(this.#addDeckDialog);
+            //TODO if a user hits an invalid name, closes, reopens,
+            // the old error message will still be there until they fail again.
+            this.#addDeckDialog.close();
         }catch(e){
             //handle specific exceptions
-            //...
+            if(e instanceof InvalidNameException){
+                this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!
+                    .setAttribute('style', 'border-color:red;');
+                this.#addDeckDialog.querySelector("#error")!
+                    .textContent = "Invalid name, names must have at least one letter (e.g., Bio).";
+            }else{
+                console.log("Unexpected error");
+            }
         }
     }
 
@@ -93,6 +106,7 @@ export default class NoteView {
     //   <h3 class="deck-title">Spanish Vocab</h3>
     //   <p class="deck-count">24 cards</p>
     //   <button class="study-btn">Study</button>
+    // TODO but how to differentiate the <button> elements on eahc of the decks the user will see???
     // </div>
 
 }

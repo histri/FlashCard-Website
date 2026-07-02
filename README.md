@@ -21,3 +21,4 @@ May 28th
 * Set up basic elements and some code, currently doesn't compile
 * The next goal is to set up the view/notifier for all the basic building blocks of the website
 * Did more research on imperative and declarative programming regarding the DOM and TS in general still struggling with intuition on which to choose
+* Worked on the add deck dialog, learned about CSS

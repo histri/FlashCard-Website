@@ -3,14 +3,14 @@ import type Listener from "./Listener.ts";
 
 export  default class NoteBook {
     #id: number;
-    #courses: Array<Deck>;
-    #numOfCourses: number;
+    #decks: Array<Deck>;
+    #numOfDecks: number;      //just size of the deck array
     #listeners: Array<Listener>;
 
     constructor() {
         //TODO for now initialize empty later on need to fetch from database that a whole other problem, In comp2452 I fetched in a really round about way
-        this.#courses = new Array<Deck>();
-        this.#numOfCourses = 0;
+        this.#decks = new Array<Deck>();
+
     }
 
     //TODO franklin mentioned that it is possible to have multiple listeners check that out
@@ -30,6 +30,10 @@ export  default class NoteBook {
 
     #checkNoteBook(): void{
         //Invariants
-
     }
+
+    addDeck(deck: Deck): void {
+        this.#decks.push(deck);
+    }
+
 }

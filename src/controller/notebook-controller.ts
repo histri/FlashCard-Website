@@ -2,6 +2,7 @@
 
 import NoteBook from "../model/NoteBook.ts";
 import NoteView from "../view/notebook-view.ts";
+import Deck from "../model/Deck.ts";
 
 export default class NotebookController {
 
@@ -15,7 +16,8 @@ export default class NotebookController {
 
     //Adds a new deck to the current notebook
     //Decks hold flashcards, currently decks property is only its name
-    addDeck(): void {
-        //NEw view?
+    addDeck(deckName: string): void {
+        let deck = new Deck(deckName);
+        this.#notebook.addDeck(deck);
     }
 }
