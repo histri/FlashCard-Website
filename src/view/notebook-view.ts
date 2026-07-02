@@ -1,7 +1,7 @@
 
 //need controller and model
 //This view implements the listener interface
-
+//TODO currently when pressing the add deck button the dialog is unable to open again
 import NotebookController from "../controller/notebook-controller.ts";
 import type NoteBook from "../model/NoteBook.ts";
 
@@ -10,34 +10,50 @@ export default class NoteView {
     #note: NoteBook;
     #title: HTMLHeadingElement;
     #addDeckDialog: HTMLDialogElement;
+    #addDeckButton: HTMLButtonElement;
     #selectDeck: HTMLSelectElement;
 
     constructor(note: NoteBook, controller: NotebookController) {
         //tie controller and model object to this specific view
         this.#note = note;
         this.#controller = controller;
-        //register the view as a listener to the Domain class
+
+        //TODO register the view as a listener to the Domain class
 
         this.#title = document.createElement("h2");
         this.#title.textContent = "Flash Card Study Tool";
+
+        //Flow user clicks button to add a new deck, after that a new dialog shows up where user enters new details
+        this.#addDeckButton = document.createElement("button");
+        this.#addDeckButton.textContent = "Add Deck";
+        this.#addDeckButton.addEventListener("click", () => {this.#addDeckDialog.showModal();})
+
         //Todo, need to add a <div> or article element to group things better instead of uppending one at a time.
         this.#addDeckDialog = document.createElement("dialog");
         this.#addDeckDialog.id = "notebook-add-deck";
         //TODO vulnerable to XSS attacks
         this.#addDeckDialog.innerHTML = `
-            <p>Enter name of the new Deck</p>
-            <label for="nickname">Nickname</label>
-           <input type="text" id="nickname" />
-           <button>Add New Deck</button>
-           <button>Close</button>
-        `
-        //TODO need to attach an even listener to the "add deck" button
-        //TODO the dialog shows up immediatly need it to shop up only on press of a button
+               <span id="error"></span><br />
+               <h2>New Deck</h2>
+               <label for="deck-name">Deck Name</label>
+               <input type="text" id="deck-name" />
+               <button id = "addDeckBtn">Create</button>
+               <button id = "closeDeckDialog">Close</button> 
+        `;
+        //Submit input
+        this.#addDeckDialog.querySelector("#addDeckBtn")!.
+        addEventListener("click", () => {this.#addDeck()});
+        //Close the dialog
+        this.#addDeckDialog.querySelector("#closeDeckDialog")!.
+        addEventListener("click", () => {this.#addDeckDialog.close()});
 
+        //TODO need to attach an event listener to the "add deck" button
         // add to the page:
+        document.body.appendChild(this.#title);
+        document.body.appendChild(this.#addDeckButton);
         document.body.appendChild(this.#addDeckDialog);
-        // dialogs are hidden by default, show yourself:
-        this.#addDeckDialog.show();
+
+
         //example taken from Comp 2452
 //         this.#dialog = document.createElement("dialog");
 //         this.#dialog.id = "add-pokemon-dialog";
@@ -51,12 +67,25 @@ export default class NoteView {
 // `
         //TODO add an event listener to this
 
-        document.body.appendChild(this.#title);
+
 
     }
 
     notify(): void{
 
+    }
+
+    #addDeck(){
+        let name = this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!.value;
+
+        try{
+            this.#controller.addDeck(name);
+            //assuming success remove the dialog from the page
+            document.body.removeChild(this.#addDeckDialog);
+        }catch(e){
+            //handle specific exceptions
+            //...
+        }
     }
 
     //Each deck preview inside the notebookview class would look something like
