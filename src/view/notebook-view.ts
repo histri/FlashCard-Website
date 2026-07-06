@@ -14,7 +14,6 @@ export default class NoteView {
     #addDeckDialog: HTMLDialogElement;
     #addDeckButton: HTMLButtonElement;
     #decksEl: HTMLUListElement;
-    #selectDeck: HTMLSelectElement;
 
     constructor(note: NoteBook, controller: NotebookController) {
         //tie controller and model object to this specific view
@@ -63,11 +62,7 @@ export default class NoteView {
         document.body.appendChild(this.#addDeckDialog);
         document.body.appendChild(this.#decksEl);
 
-
-
         //TODO add an event listener to this
-
-
 
     }
 
@@ -78,6 +73,7 @@ export default class NoteView {
         //TODO deckEL and decksEL are bad names they look too similar
         //with new change display all the decks
         // empty the contents of the list (remove all li within the list)
+        //TODO this seems really inefficient
         this.#decksEl.replaceChildren();
         this.#note.decks.forEach((deck: Deck): void => {
             let deckEl = document.createElement("li");
@@ -94,7 +90,7 @@ export default class NoteView {
             const studyBtn = document.createElement("button");
             studyBtn.className = "study-btn";
             studyBtn.textContent = "Study";
-
+            studyBtn.addEventListener("click", () => {this.#controller.openDeck(deck)})
             deckEl.append(titleEl, countEl, studyBtn);
             this.#decksEl.appendChild(deckEl);
         });

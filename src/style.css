@@ -1,3 +1,6 @@
+/*TODO next big goal is to make the created deck buttons in notebook-view look better
+   I found that you can make a box for the deck, and then have invisible button the size of that box,
+   look into that*/
 button {
   font-size: 1.2rem;
   padding: 5px 15px;

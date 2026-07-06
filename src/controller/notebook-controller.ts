@@ -3,11 +3,13 @@
 import NoteBook from "../model/NoteBook.ts";
 import NoteView from "../view/notebook-view.ts";
 import Deck from "../model/Deck.ts";
+import deckMenuView from "../view/deck-menu-view.ts";
 
 export default class NotebookController {
 
     #notebook: NoteBook;
     #notebookView: NoteView;
+    #deckMENUview: deckMenuView;
     constructor() {
         this.#notebook = new NoteBook();
         this.#notebookView = new NoteView(this.#notebook, this);
@@ -19,5 +21,10 @@ export default class NotebookController {
     addDeck(deckName: string): void {
         let deck = new Deck(deckName);
         this.#notebook.addDeck(deck);
+    }
+
+    openDeck(deck:Deck): void {
+        //TODO need to check there wasn't a previously created deck view which could disrupt the operation
+        this.#deckMENUview = new deckMenuView(deck, this);
     }
 }

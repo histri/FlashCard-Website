@@ -1,3 +1,6 @@
+import {InvalidNameException} from "./exceptions.ts";
+import {assert} from "../assertions.ts";
+
 export default class FlashCard {
     //Main functionality for the application
     //Each flash card has a title and info side the user studies by
@@ -9,19 +12,32 @@ export default class FlashCard {
 
 
     #id: number;
-    #title: string;             //front side of the card
-    #backDescript: string;      //back side of the card that gets revealed later
+    #titleSide: string;             //front side of the card
+    #infoSide: string;      //back side of the card that gets revealed later
 
 
-    constructor(title:string, backDescript:string) {
+    constructor(titleSide:string, infoSide:string) {
         //ID will be initialised from database (not set up yet)
-        this.#title = title;
-        this.#backDescript = backDescript;
+        this.#titleSide = titleSide;
+        this.#infoSide = infoSide;
+        //check preconditions
+        if(this.#titleSide.length ===0){
+            throw new InvalidNameException();
+        }
+        if(this.#infoSide.length ===0){
+            throw new InvalidNameException();
+        }
 
+        //check invariants
+        this.#checkCard();
     }
 
-    checkCard() :void{
+    #checkCard() :void{
         //Invariants
+        assert(this.#titleSide.length > 0, "Title must not be empty");
+
+        //TODO maybe get rid of this assertion
+        assert(this.#infoSide.length > 0, "Info must not be empty");
     }
 
 }
