@@ -81,10 +81,21 @@ export default class NoteView {
         this.#decksEl.replaceChildren();
         this.#note.decks.forEach((deck: Deck): void => {
             let deckEl = document.createElement("li");
-            deckEl.innerHTML = `${deck.name}
-             <p class="deck-count">${deck.size}</p>
-             <button class="study-btn">Study</button> 
-            `;
+            deckEl.className = "deck-card";
+
+            const titleEl = document.createElement("h3");
+            titleEl.className = "deck-title";
+            titleEl.textContent = deck.name;        //should be a bit safer?
+
+            const countEl = document.createElement("p");
+            countEl.className = "deck-count";
+            countEl.textContent = `${deck.size} cards`;
+
+            const studyBtn = document.createElement("button");
+            studyBtn.className = "study-btn";
+            studyBtn.textContent = "Study";
+
+            deckEl.append(titleEl, countEl, studyBtn);
             this.#decksEl.appendChild(deckEl);
         });
     }
