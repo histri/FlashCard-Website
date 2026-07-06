@@ -10,7 +10,7 @@ export  default class NoteBook {
     constructor() {
         //TODO for now initialize empty later on need to fetch from database that a whole other problem, In comp2452 I fetched in a really round about way
         this.#decks = new Array<Deck>();
-
+        this.#listeners = new Array<Listener>();
     }
 
     //TODO franklin mentioned that it is possible to have multiple listeners check that out
@@ -34,6 +34,11 @@ export  default class NoteBook {
 
     addDeck(deck: Deck): void {
         this.#decks.push(deck);
+        this.#notifyAll();
+    }
+
+    get decks(): Array<Deck> {
+        return this.#decks;
     }
 
 }

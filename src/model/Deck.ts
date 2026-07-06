@@ -8,6 +8,7 @@ export default class Deck {
     #name: string;
     #id: number;            //will probably be given by database
     cards: Array<FlashCard>;
+    #numberOfCards: number;
     constructor(name:string) {
         this.#name = name;
         if (this.#name.length === 0) {
@@ -21,5 +22,14 @@ export default class Deck {
     //Invariants
         assert(this.#name.length > 0, "Names must not be empty")
     }
+
+    get name(): string {
+        return this.#name;
+    }
+    get size() : number {
+        return this.cards.length;
+    }
+
+
 
 }
