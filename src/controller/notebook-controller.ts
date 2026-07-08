@@ -4,12 +4,14 @@ import NoteBook from "../model/NoteBook.ts";
 import NoteView from "../view/notebook-view.ts";
 import Deck from "../model/Deck.ts";
 import deckMenuView from "../view/deck-menu-view.ts";
+import createCardView from "../view/create-card-view.ts";
 
 export default class NotebookController {
 
     #notebook: NoteBook;
     #notebookView: NoteView;
     #deckMENUview: deckMenuView;
+    #createCardView?: createCardView;
     constructor() {
         this.#notebook = new NoteBook();
         this.#notebookView = new NoteView(this.#notebook, this);
@@ -27,4 +29,15 @@ export default class NotebookController {
         //TODO need to check there wasn't a previously created deck view which could disrupt the operation
         this.#deckMENUview = new deckMenuView(deck, this);
     }
+
+    addToDeck(): void {
+
+    }
+
+    showCreateCardView():void {
+        if(this.#createCardView == undefined) {
+            this.#createCardView = new createCardView(this);
+        }
+    }
+
 }

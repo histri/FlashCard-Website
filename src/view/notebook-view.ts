@@ -73,7 +73,7 @@ export default class NoteView {
         //TODO deckEL and decksEL are bad names they look too similar
         //with new change display all the decks
         // empty the contents of the list (remove all li within the list)
-        //TODO this seems really inefficient
+        //TODO this seems really inefficient to keep removing all the children before just reinputting them and one more deck
         this.#decksEl.replaceChildren();
         this.#note.decks.forEach((deck: Deck): void => {
             let deckEl = document.createElement("li");

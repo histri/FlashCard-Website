@@ -7,6 +7,7 @@ button {
 }
 
 /* Very groooovy background*/
+/*https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog*/
 dialog::backdrop {
   background-image: linear-gradient(
           45deg,
