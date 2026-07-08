@@ -30,8 +30,12 @@ export default class NotebookController {
     openDeck(deck:Deck): void {
         //TODO if I need the deck controller to talk to Notebook Controller
         // (might need for preview of how many cards in a deck) -> just pass NoteBook Controller as a parameter
-
+        this.#notebookView?.remove
         this.#deckController = new DeckController(deck);
+
+    }
+
+    deleteDeck(deck:Deck): void {
 
     }
 

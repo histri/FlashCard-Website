@@ -40,6 +40,12 @@ export default class Deck {
         this.#checkDeck();
     }
 
+    #notifyAll() {
+        this.#listeners.forEach((l) => l.notify());
+        //TODO it would be a good idea to save the info to database on each notify
+    }
+
+
     get name(): string {
         return this.#name;
     }

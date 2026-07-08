@@ -40,7 +40,7 @@ export default class NoteView {
                <label for="deck-name">Deck Name</label>
                <input type="text" id="deck-name" />
                <button id = "addDeckBtn">Create</button>
-               <button id = "closeDeckDialog">Close</button> 
+               <button id = "closeDeckBtn">Close</button> 
         `;
 
         this.#decksEl = document.createElement("ul");
@@ -50,12 +50,12 @@ export default class NoteView {
         this.#addDeckDialog.querySelector("#addDeckBtn")!.
         addEventListener("click", () => {this.#addDeck()});
         //Close the dialog
-        this.#addDeckDialog.querySelector("#closeDeckDialog")!.
+        this.#addDeckDialog.querySelector("#closeDeckBtn")!.
         addEventListener("click", () => {this.#addDeckDialog.close()});
 
 
 
-        //TODO need to attach an event listener to the "add deck" button
+
         // add to the page:
         document.body.appendChild(this.#title);
         document.body.appendChild(this.#addDeckButton);
@@ -91,6 +91,9 @@ export default class NoteView {
             studyBtn.className = "study-btn";
             studyBtn.textContent = "Study";
             studyBtn.addEventListener("click", () => {this.#controller.openDeck(deck);})
+
+
+
             deckEl.append(titleEl, countEl, studyBtn);
             this.#decksEl.appendChild(deckEl);
         });

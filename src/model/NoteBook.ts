@@ -46,6 +46,10 @@ export  default class NoteBook {
         this.#notifyAll();
     }
 
+    deleteDeck(deck: Deck): void {
+        //TODO implement
+    }
+
     /*
             GETTERS
     */

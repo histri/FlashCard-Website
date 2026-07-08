@@ -8,20 +8,34 @@ export default class deckMenuView {
     //For now choosing to not do that
     #controller: DeckController;
     #deck: Deck;
-    #title: HTMLHeadingElement;
-    #addCardButton: HTMLButtonElement;          //clicking the button should open the dialog for details of the flashcard
-    #deleteCardButton: HTMLButtonElement;       //clicking the buttong should open dialog for which specific card to delete
+
+
 
     constructor(deck: Deck, controller: DeckController) {
         this.#deck = deck;
         this.#controller = controller;
 
-        this.#title = document.createElement("h2");
-        //I think using text.Content is more secure against XSS attacks, but I am not sure
-        this.#title.textContent = deck.name;
+        document.querySelector("#app")!.innerHTML =
+            `<div id="deck-menu">
+                <h2 id="deck-title"></h2>
+                <button id="add-card">Add Card</button>
+                <button id="delete-card">Delete Card</button>
+                <button id="exit-deck-menu">Back</button>
+                <button id="view-cards">View Cards</button>
+            </div>`;
 
-        this.#addCardButton = document.createElement("button");
-        this.#addCardButton.addEventListener("click", () => {this.#controller.addToDeck();});
+        //IMPORTAnt set title via textContent, not innerHTML because user-supplied
+        document.querySelector<HTMLHeadingElement>("#deck-title")!
+            .textContent = deck.name;
+
+        document.querySelector("#add-card")!
+            .addEventListener("click", () => this.#controller.addToDeck());
+        document.querySelector("#delete-card")!
+            .addEventListener("click", () => this.#controller.deleteCard());
+        document.querySelector("#exit-deck-menu")!
+            .addEventListener("click", () => this.#controller.exitDeckMenu());
+        document.querySelector("#view-cards")!
+            .addEventListener("click", () => this.#controller.viewCards());
 
     }
 }
