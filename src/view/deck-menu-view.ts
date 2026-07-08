@@ -1,17 +1,18 @@
 import type NotebookController from "../controller/notebook-controller.ts";
 import type Deck from "../model/Deck.ts";
+import type DeckController from "../controller/deck-controller.ts";
 
 export default class deckMenuView {
 
     //TODO should I split a new controller for responsibilities??
     //For now choosing to not do that
-    #controller: NotebookController;
+    #controller: DeckController;
     #deck: Deck;
     #title: HTMLHeadingElement;
     #addCardButton: HTMLButtonElement;          //clicking the button should open the dialog for details of the flashcard
     #deleteCardButton: HTMLButtonElement;       //clicking the buttong should open dialog for which specific card to delete
 
-    constructor(deck: Deck, controller: NotebookController) {
+    constructor(deck: Deck, controller: DeckController) {
         this.#deck = deck;
         this.#controller = controller;
 

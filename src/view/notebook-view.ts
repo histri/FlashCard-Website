@@ -90,7 +90,7 @@ export default class NoteView {
             const studyBtn = document.createElement("button");
             studyBtn.className = "study-btn";
             studyBtn.textContent = "Study";
-            studyBtn.addEventListener("click", () => {this.#controller.openDeck(deck)})
+            studyBtn.addEventListener("click", () => {this.#controller.openDeck(deck);})
             deckEl.append(titleEl, countEl, studyBtn);
             this.#decksEl.appendChild(deckEl);
         });

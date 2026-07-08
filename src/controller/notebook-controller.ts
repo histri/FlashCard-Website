@@ -5,10 +5,12 @@ import NoteView from "../view/notebook-view.ts";
 import Deck from "../model/Deck.ts";
 import deckMenuView from "../view/deck-menu-view.ts";
 import createCardView from "../view/create-card-view.ts";
+import DeckController from "./deck-controller.ts";
 
 export default class NotebookController {
 
     #notebook: NoteBook;
+    #deckController: DeckController;
     #notebookView: NoteView;
     #deckMENUview: deckMenuView;
     #createCardView?: createCardView;
@@ -26,18 +28,12 @@ export default class NotebookController {
     }
 
     openDeck(deck:Deck): void {
-        //TODO need to check there wasn't a previously created deck view which could disrupt the operation
-        this.#deckMENUview = new deckMenuView(deck, this);
+        //TODO if I need the deck controller to talk to Notebook Controller
+        // (might need for preview of how many cards in a deck) -> just pass NoteBook Controller as a parameter
+
+        this.#deckController = new DeckController(deck);
+
     }
 
-    addToDeck(): void {
-
-    }
-
-    showCreateCardView():void {
-        if(this.#createCardView == undefined) {
-            this.#createCardView = new createCardView(this);
-        }
-    }
 
 }
