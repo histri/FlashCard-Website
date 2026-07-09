@@ -1,6 +1,32 @@
 /*TODO next big goal is to make the created deck buttons in notebook-view look better
    I found that you can make a box for the deck, and then have invisible button the size of that box,
    look into that*/
+
+h2{
+    /*TODO add a generic default*/
+    /*Arial is a font fall back */
+
+    font-family: Verdana, Arial;
+    color: black;
+}
+
+h3{
+     font-family: Verdana, Arial;
+}
+
+/*Style the buttons in the deck view */
+.deck-button-row{
+    display: flex;
+    gap: 8px;
+}
+
+.deck-button-row button{
+    flex: 1;
+    background-color: lightpink;
+    padding: 8px 0;
+}
+
+
 button {
   font-size: 1.2rem;
   padding: 5px 15px;

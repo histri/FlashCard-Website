@@ -10,6 +10,7 @@ import type Deck from "../model/Deck.ts";
 export default class NoteView {
     #controller: NotebookController
     #note: NoteBook;
+    #root: HTMLDivElement;
     #title: HTMLHeadingElement;
     #addDeckDialog: HTMLDialogElement;
     #addDeckButton: HTMLButtonElement;
@@ -19,8 +20,9 @@ export default class NoteView {
         //tie controller and model object to this specific view
         this.#note = note;
         this.#controller = controller;
-
         this.#note.registerListener(this);
+
+        this.#root = document.createElement("div");
 
         this.#title = document.createElement("h2");
         this.#title.textContent = "Flash Card Study Tool";
@@ -30,6 +32,7 @@ export default class NoteView {
         this.#addDeckButton.textContent = "Add Deck";
         this.#addDeckButton.addEventListener("click", () => {this.#addDeckDialog.showModal();})
 
+        //Dialog
         //Todo, need to add a <div> or article element to group things better instead of uppending one at a time.
         this.#addDeckDialog = document.createElement("dialog");
         this.#addDeckDialog.id = "notebook-add-deck";
@@ -53,17 +56,12 @@ export default class NoteView {
         this.#addDeckDialog.querySelector("#closeDeckBtn")!.
         addEventListener("click", () => {this.#addDeckDialog.close()});
 
-
-
-
-        // add to the page:
-        document.body.appendChild(this.#title);
-        document.body.appendChild(this.#addDeckButton);
-        document.body.appendChild(this.#addDeckDialog);
-        document.body.appendChild(this.#decksEl);
+        //TODO append or appendChild??
+        this.#root.append(this.#title, this.#addDeckButton, this.#addDeckDialog, this.#decksEl) ;
+        document.querySelector("#app")!.appendChild(this.#root);
 
         //TODO add an event listener to this
-
+        this.notify();
     }
 
     notify(): void{
@@ -99,6 +97,11 @@ export default class NoteView {
         });
     }
 
+    destroy(): void{
+        this.#root.remove();
+        //TODO need to remove this view as a listener of notebook domain class
+    }
+
     #addDeck(){
         let name = this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!.value;
         try{
@@ -120,6 +123,7 @@ export default class NoteView {
         }
     }
 
+
     //Each deck preview inside the notebookview class would look something like
     // <div class="deck-card" data-deck-id="123">
     //   <h3 class="deck-title">Spanish Vocab</h3>
@@ -127,5 +131,6 @@ export default class NoteView {
     //   <button class="study-btn">Study</button>
     // TODO but how to differentiate the <button> elements on eahc of the decks the user will see???
     // </div>
+
 
 }

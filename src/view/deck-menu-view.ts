@@ -1,11 +1,9 @@
-import type NotebookController from "../controller/notebook-controller.ts";
+
 import type Deck from "../model/Deck.ts";
 import type DeckController from "../controller/deck-controller.ts";
 
 export default class deckMenuView {
 
-    //TODO should I split a new controller for responsibilities??
-    //For now choosing to not do that
     #controller: DeckController;
     #deck: Deck;
 
@@ -18,10 +16,14 @@ export default class deckMenuView {
         document.querySelector("#app")!.innerHTML =
             `<div id="deck-menu">
                 <h2 id="deck-title"></h2>
-                <button id="add-card">Add Card</button>
-                <button id="delete-card">Delete Card</button>
-                <button id="exit-deck-menu">Back</button>
-                <button id="view-cards">View Cards</button>
+                <!--wrapping the buttons in a class to make it easier to apply CSS on top -->
+                <div class="deck-button-row">
+                    <button id="add-card">Add Card</button>
+                    <button id="delete-card">Delete Card</button>
+                    <button id = 'edit-card'>Edit Card</button>
+                    <button id="view-cards">View Cards</button>
+                    <button id="exit-deck-menu">Back To Menu</button>
+                </div>
             </div>`;
 
         //IMPORTAnt set title via textContent, not innerHTML because user-supplied
