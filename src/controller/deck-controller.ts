@@ -16,18 +16,26 @@ export default class DeckController {
 
     }
 
-    //Typical controller things todo
+    //Show the create Card dialog where user enters card details
     showCreateCardView() {
         if(this.#createCardView === undefined) {
             this.#createCardView = new createCardView(this);
         }
     }
 
+    //Closes the createCard View - can either be done by user via close btn or submit btn
+    //TODO might make a general close View method if having multiple close methods gets bulky
+    closeCreateCardView(){
+        this.#createCardView = undefined;
+    }
+
+    //Add a newly created card to the deck
     addToDeck(title:string, info: string): void {
         let card = new FlashCard(title, info);
         this.#givenDeck.addCard(card);
-        this.#createCardView = undefined;
+       this.closeCreateCardView();
     }
+
 
     deleteCard(): void {
         //todo
@@ -41,11 +49,8 @@ export default class DeckController {
         //todo
     }
 
-
-    showCreateCard(){
-        if(this.#createCardView == undefined){
-            this.#createCardView = new createCardView(this);
-        }
+    editCards():void{
+        //todo
     }
 
 

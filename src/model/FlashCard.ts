@@ -11,7 +11,7 @@ export default class FlashCard {
     //TODO possible future functionality - draw input,
 
 
-    #id: number;
+    #id: number;                //for future when woking with DB persistence
     #titleSide: string;             //front side of the card
     #infoSide: string;      //back side of the card that gets revealed later
 
@@ -37,6 +37,15 @@ export default class FlashCard {
 
         //TODO maybe get rid of this assertion
         assert(this.#infoSide.length > 0, "Info must not be empty");
+    }
+
+    //GETTERS
+
+    get titleSide(){
+        return this.#titleSide;
+    }
+    get infoSide(){
+        return this.#infoSide;
     }
 
 }

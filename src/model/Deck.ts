@@ -49,6 +49,9 @@ export default class Deck {
     get name(): string {
         return this.#name;
     }
+    get cards (): Array<FlashCard> {
+        return this.#cards;
+    }
     get size() : number {
         return this.#cards.length;
     }

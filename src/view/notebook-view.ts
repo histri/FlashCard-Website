@@ -56,7 +56,10 @@ export default class NoteView {
         addEventListener("click", () => {this.#addDeck()});
         //Close the dialog
         this.#addDeckDialog.querySelector("#closeDeckBtn")!.
-        addEventListener("click", () => {this.#addDeckDialog.close()});
+        addEventListener("click", () => {
+            //remove the text the user might have entered before clicking close
+            this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!.value = "";
+            this.#addDeckDialog.close()});
 
         //TODO append or appendChild??
         this.#root.append(this.#title, this.#addDeckButton, this.#addDeckDialog, this.#decksEl) ;
@@ -113,6 +116,7 @@ export default class NoteView {
             //TODO if a user hits an invalid name, closes, reopens,
             // the old error message will still be there until they fail again.
             this.#addDeckDialog.close();
+            this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!.value = "";
         }catch(e : any){
             //handle specific exceptions
             if(e instanceof InvalidNameException){
