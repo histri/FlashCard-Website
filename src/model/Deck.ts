@@ -58,8 +58,11 @@ export default class Deck {
     //Add a card to the deck
     //not sure about paramters yet, maybe name or number(id) of the deck
     //return boolean - whether operation was successful
-    addCard(): boolean{
-        return false;
+    addCard(card : FlashCard): void{
+        this.#cards.push(card);
+        //TODO persist data
+        //Notify all listeners
+        this.#notifyAll();
     }
 
 

@@ -36,7 +36,9 @@ export default class NoteView {
         //Todo, need to add a <div> or article element to group things better instead of uppending one at a time.
         this.#addDeckDialog = document.createElement("dialog");
         this.#addDeckDialog.id = "notebook-add-deck";
-        //TODO vulnerable to XSS attacks
+        //TODO vulnerable to XSS attacks?
+
+        //TODO maybe move the create deck dialog into its own view?
         this.#addDeckDialog.innerHTML = `
                <span id="error"></span><br />
                <h2>New Deck</h2>
@@ -103,6 +105,7 @@ export default class NoteView {
     }
 
     #addDeck(){
+
         let name = this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!.value;
         try{
             this.#controller.addDeck(name);
@@ -110,7 +113,7 @@ export default class NoteView {
             //TODO if a user hits an invalid name, closes, reopens,
             // the old error message will still be there until they fail again.
             this.#addDeckDialog.close();
-        }catch(e){
+        }catch(e : any){
             //handle specific exceptions
             if(e instanceof InvalidNameException){
                 this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!

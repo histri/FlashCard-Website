@@ -2,13 +2,14 @@
 
 import Deck from "../model/Deck.ts";
 import deckMenuView from "../view/deck-menu-view.ts";
-import type createCardView from "../view/create-card-view.ts";
+import createCardView from "../view/create-card-view.ts";
+import FlashCard from "../model/FlashCard.ts";
 
 export default class DeckController {
 
     #givenDeck: Deck;
     #deckView: deckMenuView;
-    #createCardView: createCardView;
+    #createCardView?: createCardView;
     constructor(deck:Deck) {
         this.#givenDeck = deck;
         this.#deckView = new deckMenuView(this.#givenDeck, this);
@@ -16,9 +17,16 @@ export default class DeckController {
     }
 
     //Typical controller things todo
+    showCreateCardView() {
+        if(this.#createCardView === undefined) {
+            this.#createCardView = new createCardView(this);
+        }
+    }
 
-    addToDeck(): void {
-        //todo
+    addToDeck(title:string, info: string): void {
+        let card = new FlashCard(title, info);
+        this.#givenDeck.addCard(card);
+        this.#createCardView = undefined;
     }
 
     deleteCard(): void {

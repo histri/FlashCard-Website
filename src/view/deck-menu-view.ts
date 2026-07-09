@@ -31,7 +31,7 @@ export default class deckMenuView {
             .textContent = deck.name;
 
         document.querySelector("#add-card")!
-            .addEventListener("click", () => this.#controller.addToDeck());
+            .addEventListener("click", () => this.#controller.showCreateCardView());
         document.querySelector("#delete-card")!
             .addEventListener("click", () => this.#controller.deleteCard());
         document.querySelector("#exit-deck-menu")!

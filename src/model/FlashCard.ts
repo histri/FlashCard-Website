@@ -1,4 +1,4 @@
-import {InvalidNameException} from "./exceptions.ts";
+import {InvalidInfoException, InvalidNameException} from "./exceptions.ts";
 import {assert} from "../assertions.ts";
 
 export default class FlashCard {
@@ -25,9 +25,8 @@ export default class FlashCard {
             throw new InvalidNameException();
         }
         if(this.#infoSide.length ===0){
-            throw new InvalidNameException();
+            throw new InvalidInfoException();
         }
-
         //check invariants
         this.#checkCard();
     }
