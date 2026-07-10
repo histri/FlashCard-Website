@@ -48,10 +48,17 @@ export default class DeckController {
     }
 
     viewCards(): void {
-        this.#deckView = undefined;
-        if (this.#viewCards === undefined) {
-            this.#viewCards = new DisplayCardsView(this.#givenDeck, this);
+        //Temp fix to a bug might try finding a better solution
+        //Not letting user enter flashcard view if the deck is empty
+        if(this.#givenDeck.size >0) {
+            this.#deckView = undefined;
+            if (this.#viewCards === undefined) {
+                this.#viewCards = new DisplayCardsView(this.#givenDeck, this);
+            }
+        }else{
+            console.log("Can't view cards if hte deck is empty")
         }
+
     }
 
     //Close the view for flipping through flashcards, go back to the deck menu view
