@@ -43,3 +43,9 @@ dialog::backdrop {
   );
   opacity: 0.75;
 }
+
+/* Pretty cool stuff with identifying CSS with "." this allow to separate in useful ways
+    .flashcard-face { position: absolute; inset: 0; }  /* matches both elements
+    .front { /* matches only the one with "front" in its class list }
+    .back  { transform: rotateY(180deg); }              /* matches only "back"
+*/
