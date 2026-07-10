@@ -4,12 +4,14 @@ import Deck from "../model/Deck.ts";
 import deckMenuView from "../view/deck-menu-view.ts";
 import createCardView from "../view/create-card-view.ts";
 import FlashCard from "../model/FlashCard.ts";
+import DisplayCardsView from "../view/Display-cards-view.ts";
 
 export default class DeckController {
 
     #givenDeck: Deck;
-    #deckView: deckMenuView;
+    #deckView?: deckMenuView;
     #createCardView?: createCardView;
+    #viewCards?: DisplayCardsView;
     constructor(deck:Deck) {
         this.#givenDeck = deck;
         this.#deckView = new deckMenuView(this.#givenDeck, this);
@@ -46,7 +48,20 @@ export default class DeckController {
     }
 
     viewCards(): void {
-        //todo
+        this.#deckView = undefined;
+        if (this.#viewCards === undefined) {
+            this.#viewCards = new DisplayCardsView(this.#givenDeck, this);
+        }
+    }
+
+    //Close the view for flipping through flashcards, go back to the deck menu view
+    //TODO this approach is really bad I can already forsee all the technical debt that will come
+    //      from deleting and rendering the menu and flashcard view over and over again
+    //      Especially since it registers itself as a listener this will be a HUGE problem
+    //      address as quickly as possible
+    exitViewCards():void{
+        this.#viewCards = undefined;
+        this.#deckView = new deckMenuView(this.#givenDeck, this);
     }
 
     editCards():void{
