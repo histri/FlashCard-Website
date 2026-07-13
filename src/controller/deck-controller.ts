@@ -9,7 +9,7 @@ import DisplayCardsView from "../view/Display-cards-view.ts";
 export default class DeckController {
 
     #givenDeck: Deck;
-    #deckView?: deckMenuView;
+    #deckView: deckMenuView;
     #createCardView?: createCardView;
     #viewCards?: DisplayCardsView;
     constructor(deck:Deck) {
@@ -66,18 +66,13 @@ export default class DeckController {
 
     }
 
-    //Close the view for flipping through flashcards, go back to the deck menu view
-    //TODO this approach is really bad I can already forsee all the technical debt that will come
-    //      from deleting and rendering the menu and flashcard view over and over again
-    //      Especially since it registers itself as a listener this will be a HUGE problem
-    //      address as quickly as possible
-
     //Close the view for flipping through flashcards, go back to the deck menu view.
     //Both views already exist - just toggle visibility, don't recreate either one.
     exitViewCards():void{
         this.#viewCards?.hide();
         this.#deckView.show();
     }
+
     editCards():void{
         //todo
     }
@@ -85,10 +80,9 @@ export default class DeckController {
     //Call this only when the user is leaving this deck entirely (e.g. going
     //back to a list of all decks).
     // views are torn down and listeners unregistered, as opposed to
-
     destroy(): void {
         this.#deckView.destroy();
-        this.#viewCards?.destroy();
+        this.#viewCards?.destroy();         //does nothing if hte viewCards is undefined
     }
 
 

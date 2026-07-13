@@ -33,14 +33,16 @@ export default class DisplayCardsView {
         //Note I don't think I need to register this view as a listener to the deck instance
 
         //make the main structure of the view
-        document.querySelector("#app")!.innerHTML = `
+        this.#rootEl = document.createElement("div");
+        this.#rootEl.id = "view-cards";
+        this.#rootEl.innerHTML = `
         <div id = "view-cards">
             <div class = "view-header">
                 <button id="exit-view-cards">Back To Menu</button>
                 <!--Would be cool to have a progress tracker at the top-->
             </div>
             
-            <div class = "flashcard"
+            <div class = "flashcard" id = "flashcard">
                 <div class="flashcard-inner">
                         <!-- class for CSS, id for queorying the element for a variable -->
                         <div class="flashcard-face front" id="card-front"></div>
@@ -48,7 +50,7 @@ export default class DisplayCardsView {
                     </div>
             </div>
             
-            <div class = "view-controlls"
+            <div class = "view-controlls">
                 <button id="flip-btn">Flip Card</button>
                     <div class="answer-buttons">
                         <!-- TODO definitely want a wrong correct buttons-->
@@ -59,10 +61,10 @@ export default class DisplayCardsView {
             </div> 
         </div>
         `
+        document.querySelector("#app")!.appendChild(this.#rootEl);
         //Better programming practice to query the root element of current view,
         //      and then to query again that element, this way lower risk of it matching something outside the current view
-        this.#rootEl = document.querySelector("#view-cards")!;
-        this.#rootEl = document.querySelector("#view-cards")!;
+
         this.#flashcardEl = this.#rootEl.querySelector("#flashcard")!;
         this.#frontEl = this.#rootEl.querySelector("#card-front")!;
         this.#backEl = this.#rootEl.querySelector("#card-back")!;
