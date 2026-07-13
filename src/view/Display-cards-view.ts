@@ -36,7 +36,6 @@ export default class DisplayCardsView {
         this.#rootEl = document.createElement("div");
         this.#rootEl.id = "view-cards";
         this.#rootEl.innerHTML = `
-        <div id = "view-cards">
             <div class = "view-header">
                 <button id="exit-view-cards">Back To Menu</button>
                 <!--Would be cool to have a progress tracker at the top-->
@@ -59,7 +58,6 @@ export default class DisplayCardsView {
                         <button id="next-btn" >Next Card</button>
                     </div>
             </div> 
-        </div>
         `
         document.querySelector("#app")!.appendChild(this.#rootEl);
         //Better programming practice to query the root element of current view,
@@ -75,13 +73,15 @@ export default class DisplayCardsView {
         this.#rootEl.querySelector("#exit-view-cards")!
             .addEventListener("click", () => this.#controller.exitViewCards());
 
+
         //TODO work on the functionality of flipping the button
-        //this.#flipBtn.addEventListener("click", () =>);
+        this.#flipBtn.addEventListener("click", () =>this.#flipCard());
 
 
         this.#renderCurrentCard();
     }
 
+    //Shows the current card
     #renderCurrentCard(): void {
         //TODO handle when user clicks view cards but doesnt have any
         const card = this.#cards.at(this.#currIndex)!;
@@ -90,6 +90,22 @@ export default class DisplayCardsView {
         //NOT sure if I can do text content on a div element
         this.#frontEl.textContent = card.titleSide;
         this.#backEl.textContent = card.infoSide;
+
+        //now change the visibility of the elements
+        this.#flipped = false;
+        //make the backside invisible, since its visible by default toggling it make it the opposite
+        //Attach the class that will make an element visible
+        this.#frontEl.classList.add("visible");
+        //this will reset the back to be invisible when we go to the next card
+        this.#backEl.classList.remove("visible");
+    }
+
+    #flipCard(): void {
+        this.#flipped = !this.#flipped;
+        //toggle removes class "visible" if html element has it, or adds it if the element does have it. this.#flipped acts the condition on whether to apply the toggle at all
+        //Attach the class that will make an element visible
+        this.#frontEl.classList.toggle("visible", !this.#flipped);
+        this.#backEl.classList.toggle("visible", this.#flipped);
     }
 
     //Make the view visible again

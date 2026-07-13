@@ -44,3 +44,18 @@ dialog::backdrop {
   opacity: 0.75;
 }
 
+/* For the current implementation of the flashcard sides CSS controls what elements look like when they have specific classes.
+
+TypeScript controls when those classes are added or removed*/
+
+/*Default for both sides the start of as invisible*/
+.flashcard-face {
+    display: none;
+}
+
+/*any item with this class becomes visible*/
+
+.flashcard-face.visible {
+    display: flex;
+}
+
