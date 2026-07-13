@@ -90,6 +90,22 @@ export default class DisplayCardsView {
         this.#backEl.textContent = card.infoSide;
     }
 
+    //Make the view visible again
+    show(): void {
+        this.#rootEl.style.display = "";
+    }
+
+    //Hide the view without destroying it
+    hide(): void {
+        this.#rootEl.style.display = "none";
+    }
+
+    //Fully tear down this view's DOM. This view doesn't register itself as a
+    //Deck listener, so there's no unregister step needed
+    destroy(): void {
+        this.#rootEl.remove();
+    }
+
 
 
 

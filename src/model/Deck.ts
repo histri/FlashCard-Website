@@ -32,12 +32,15 @@ export default class Deck {
     //register all the things that will be listening to the notebook
             //currently just the deck-menu-view, but could also be the notebook view
             //considering that it will display how many flashcards each deck has for example
-    //TODO potential issue I am seeing right now is that moving in and out of the deck view could
-    //  create multiple register while only one is needed
+
     registerListener(listener: Listener): void {
         this.#listeners.push(listener);
         //check invariants
         this.#checkDeck();
+    }
+
+    unregisterListener(listener: Listener): void {
+        //TODO not sure about how to remove a specific class instance in TS
     }
 
     #notifyAll() {

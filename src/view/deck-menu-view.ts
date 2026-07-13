@@ -8,6 +8,7 @@ export default class deckMenuView {
     #controller: DeckController;
     #deck: Deck;
     #cardsEl: HTMLUListElement;
+    #rootEl: HTMLDivElement;   //this view's own root, so it can live alongside other views in #app
 
 
     constructor(deck: Deck, controller: DeckController) {
@@ -16,9 +17,10 @@ export default class deckMenuView {
         //register the view as a listener to deck doamin instance
         this.#deck.registerListener(this);
 
-        document.querySelector("#app")!.innerHTML =
-            `<div id="deck-menu">
-                <h2 id="deck-title"></h2>
+        this.#rootEl = document.createElement("div");
+        this.#rootEl.id = "deck-menu";
+        this.#rootEl.innerHTML =
+            `    <h2 id="deck-title"></h2>
                 <!--wrapping the buttons in a class to make it easier to apply CSS on top -->
                 <div class="deck-button-row">
                     <button id="add-card">Add Card</button>
@@ -32,24 +34,25 @@ export default class deckMenuView {
                 <!-- will attach a list here too -->
             </div>`;
 
-        //TODO text abouve the list saying Card Preview
+        document.querySelector("#app")!.appendChild(this.#rootEl);
+
         //create the list imperatively so we hold a direct reference, no re-query needed
         this.#cardsEl = document.createElement("ul");
-        document.querySelector("#deck-menu")!.appendChild(this.#cardsEl);
+        this.#rootEl.appendChild(this.#cardsEl);
 
         //IMPORTAnt set title via textContent, not innerHTML because user-supplied
-        document.querySelector<HTMLHeadingElement>("#deck-title")!
+        this.#rootEl.querySelector<HTMLHeadingElement>("#deck-title")!
             .textContent = deck.name;
         //Register the click functionallity on all the immediatly accecible user buttons
-        document.querySelector("#add-card")!
+        this.#rootEl.querySelector("#add-card")!
             .addEventListener("click", () => this.#controller.showCreateCardView());
-        document.querySelector("#delete-card")!
+        this.#rootEl.querySelector("#delete-card")!
             .addEventListener("click", () => this.#controller.deleteCard());
-        document.querySelector("#exit-deck-menu")!
+        this.#rootEl.querySelector("#exit-deck-menu")!
             .addEventListener("click", () => this.#controller.exitDeckMenu());
-        document.querySelector("#view-cards")!
+        this.#rootEl.querySelector("#view-cards")!
             .addEventListener("click", () => this.#controller.viewCards());
-        document.querySelector("#edit-card")!
+        this.#rootEl.querySelector("#edit-card")!
             .addEventListener("click", () => this.#controller.editCards());
 
         //When Deck will have something persisted we will need to update the view immediately
@@ -77,5 +80,27 @@ export default class deckMenuView {
             this.#cardsEl.appendChild(cardEl);
         });
 
+    }
+    ///
+    ///<style> - html shortcut to get CSS applied to elements
+    ///
+
+    //Make the view visible again. Use this for back forth navigation in deck menu
+    show(): void {
+        this.#rootEl.style.display = "";
+    }
+
+    //Hide the view without destroying it or unregistering the listener.
+    hide(): void {
+        this.#rootEl.style.display = "none";
+    }
+
+    //Fully tear down this view: unregister from the deck so it stops being
+    //notified, and remove its DOM. Call this ONLY when the view is being
+    //discarded for good (not just navigated away from temporarily) - e.g. if
+    //the user leaves this deck entirely for a different one.
+    destroy(): void {
+        this.#deck.unregisterListener(this);
+        this.#rootEl.remove();
     }
 }
