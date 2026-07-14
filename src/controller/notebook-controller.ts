@@ -32,6 +32,10 @@ export default class NotebookController {
         // (might need for preview of how many cards in a deck) -> just pass NoteBook Controller as a parameter
         this.#notebookView?.destroy();
         this.#deckController = new DeckController(deck);
+        this.#deckController.addToDeck("Card A", "AAA");
+        this.#deckController.addToDeck("Card B", "BBB");
+        this.#deckController.addToDeck("Card C", "CCC");
+        this.#deckController.addToDeck("Card D", "DDD");
 
     }
 

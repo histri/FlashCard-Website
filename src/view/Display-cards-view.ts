@@ -3,6 +3,9 @@ import type DeckController from "../controller/deck-controller.ts";
 import type Deck from "../model/Deck.ts";
 import type FlashCard from "../model/FlashCard.ts";
 
+//Note choosing to not reset the card view to first card if user goes back to deck view
+// TODO     however this might be an issue if they delete a card
+
 export default class DisplayCardsView {
 
     #controller: DeckController;
@@ -54,7 +57,7 @@ export default class DisplayCardsView {
                     <div class="answer-buttons">
                         <!-- TODO definitely want a wrong correct buttons-->
                         <!--TODO maybe disable the buttons before the user sees the other side? -->
-                        <button id="prev-btn" disabled >Previous Card</button>
+                        <button id="prev-btn" disabled >Previous Card</button>  <!-- make sure the prev is disable by default-->
                         <button id="next-btn" >Next Card</button>
                     </div>
             </div> 
@@ -73,13 +76,15 @@ export default class DisplayCardsView {
         this.#rootEl.querySelector("#exit-view-cards")!
             .addEventListener("click", () => this.#controller.exitViewCards());
 
-
-        //TODO work on the functionality of flipping the button
         this.#flipBtn.addEventListener("click", () =>this.#flipCard());
 
+        this.#nextBtn.addEventListener("click", () => this.#showNextCard());
+        this.#prevBtn.addEventListener("click", () => this.#showPrevCard());
 
         this.#renderCurrentCard();
     }
+
+    //TODO I can already see there will be an issue in terms of viewing cards when switching back and forth between deck and card view, especially if a card is deleted
 
     //Shows the current card
     #renderCurrentCard(): void {
@@ -100,6 +105,7 @@ export default class DisplayCardsView {
         this.#backEl.classList.remove("visible");
     }
 
+    //"Flips" the card to show the opposite side (Title/Info) and vice versa
     #flipCard(): void {
         this.#flipped = !this.#flipped;
         //toggle removes class "visible" if html element has it, or adds it if the element does have it. this.#flipped acts the condition on whether to apply the toggle at all
@@ -108,6 +114,43 @@ export default class DisplayCardsView {
         this.#backEl.classList.toggle("visible", this.#flipped);
     }
 
+    //Shows the next card in the deck
+    #showNextCard() : void {
+        //only update the value of currIndex if it isnt exceeding the deck size(0 indexed)
+        if(this.#currIndex < this.#cards.length-1){
+            this.#currIndex++;
+            this.#renderCurrentCard();
+            //disable the next button if the user hits the last card
+            if(this.#currIndex == this.#cards.length-1){
+                this.#nextBtn.disabled = true;
+            }
+            //enable the prev Card is enabled if it was disabled
+            if(this.#prevBtn.disabled){
+                this.#prevBtn.disabled = false;
+            }
+        }else{
+            //Hopefully this never gets hit since the button gets disabled
+            console.log("tried to exceed deck size");
+        }
+    }
+
+    //Shows the previous card in the deck
+    #showPrevCard():void{
+        //only update the value of currIndex if it isn't smaller than deck size(0 indexed)
+        if(this.#currIndex > 0){
+            this.#currIndex--;
+            this.#renderCurrentCard();
+            if(this.#currIndex == 0){
+                this.#prevBtn.disabled = true;
+            }
+            //enable the next Card is enabled if it was disabled
+            if(this.#nextBtn.disabled){
+                this.#nextBtn.disabled = false;
+            }
+        }else {
+            console.log("can't go to a previous card, since we at start of deck");
+        }
+    }
     //Make the view visible again
     show(): void {
         this.#rootEl.style.display = "";

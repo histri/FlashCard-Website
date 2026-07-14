@@ -31,6 +31,7 @@ Since this is a learning project no LLMs were used to write any lines of code.
 * Worked on the add deck dialog, learned about CSS
 * Identified serisous issues with my implementation of MVC and observer pattern worked to fix it 
 * Added a Deck Menu and very basic card view with flipping cards 
+* Learned about merging git branches
 
 ![First iteration of Adding decks](images/makeDeck.PNG) 
 ![..](images/addDeck.PNG)
