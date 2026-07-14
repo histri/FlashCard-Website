@@ -29,7 +29,12 @@ Since this is a learning project no LLMs were used to write any lines of code.
 * The next goal is to set up the view/notifier for all the basic building blocks of the website
 * Did more research on imperative and declarative programming regarding the DOM and TS in general still struggling with intuition on which to choose
 * Worked on the add deck dialog, learned about CSS
+* Identified serisous issues with my implementation of MVC and observer pattern worked to fix it 
+* Added a Deck Menu and very basic card view with flipping cards 
 
 ![First iteration of Adding decks](images/makeDeck.PNG) 
 ![..](images/addDeck.PNG)
 ![..](images/createdView.PNG) 
+![..](images/Deck%20Menu%20View.PNG)
+![..](images/createCardView.PNG)
+![..](images/CardView.PNG)
