@@ -65,8 +65,11 @@ export default class NoteView {
         this.#root.append(this.#title, this.#addDeckButton, this.#addDeckDialog, this.#decksEl) ;
         document.querySelector("#app")!.appendChild(this.#root);
 
-        //TODO add an event listener to this
         this.notify();
+    }
+    //I dont like that adding a card which just changes one HTML element rewrites the entire page(which is hidden in some cases)
+    listenToDeck(deck:Deck) {
+        deck.registerListener(this);
     }
 
     notify(): void{
@@ -102,9 +105,17 @@ export default class NoteView {
         });
     }
 
-    destroy(): void{
-        this.#root.remove();
-        //TODO need to remove this view as a listener of notebook domain class
+
+    /// When user enters a deck, don't delete the deck, instead make the deck "invisible"
+
+    //Make the view visible again. Use this for back forth navigation in deck menu
+    show(): void {
+        this.#root.style.display = "";
+    }
+
+    //Hide the view without destroying it or unregistering the listener.
+    hide(): void {
+        this.#root.style.display = "none";
     }
 
     #addDeck(){

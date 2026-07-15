@@ -39,10 +39,17 @@ export default class Deck {
         this.#checkDeck();
     }
 
+    //TODO this whole approach might be inefficient since Deck will probably only ever have one listener
+    //A specific listener instance is removed from the model's list of listeners so it is no longer notifying it
+    //Going out of deckmenu means we delete it - but deck menu registers itself as a listener to the model
     unregisterListener(listener: Listener): void {
-        //TODO not sure about how to remove a specific class instance in TS
+        //https://stackoverflow.com/questions/15292278/how-do-i-remove-an-array-item-in-typescript
+        this.#listeners = this.#listeners.filter((l) => l !== listener);
+        //check invariants
+        this.#checkDeck();
     }
 
+    //Notify all the listeners that a change happened to the domain model (new number of cards)
     #notifyAll() {
         this.#listeners.forEach((l) => l.notify());
         //TODO it would be a good idea to save the info to database on each notify

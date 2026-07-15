@@ -25,18 +25,27 @@ export default class NotebookController {
     addDeck(deckName: string): void {
         let deck = new Deck(deckName);
         this.#notebook.addDeck(deck);
+        this.#notebookView.listenToDeck(deck);
     }
 
+    //The user can enter a deckmenu - this creates a new deck controller and deck menu view
+    //      the notebook menu isn't deleted just made "invisible"
     openDeck(deck:Deck): void {
-        //TODO if I need the deck controller to talk to Notebook Controller
-        // (might need for preview of how many cards in a deck) -> just pass NoteBook Controller as a parameter
-        this.#notebookView?.destroy();
-        this.#deckController = new DeckController(deck);
-        this.#deckController.addToDeck("Card A", "AAA");
-        this.#deckController.addToDeck("Card B", "BBB");
-        this.#deckController.addToDeck("Card C", "CCC");
-        this.#deckController.addToDeck("Card D", "DDD");
 
+        this.#notebookView.hide();
+        this.#deckController = new DeckController(deck, this);      //want the controller to know about its parent so passing it on
+
+
+    }
+
+    //The user leaves the deck returning to the notebook view
+    //      in order to avoid bloat from multiple decks existing simultaneously and listening to changes that won't happen
+    //      delete the deck controller and deck menu view, unregister the view as a listener to the Deck instance
+    exitDeck(): void {
+        //Destroy deck controller
+        //TODO I am not a big fan of the fact the destroy command need to propagate all the way through the controller and each view
+        //      maybe there is a better way to do it
+        this.#notebookView.show();
     }
 
     deleteDeck(deck:Deck): void {

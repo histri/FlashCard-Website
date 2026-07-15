@@ -5,17 +5,20 @@ import deckMenuView from "../view/deck-menu-view.ts";
 import createCardView from "../view/create-card-view.ts";
 import FlashCard from "../model/FlashCard.ts";
 import DisplayCardsView from "../view/Display-cards-view.ts";
+import  NotebookController from "./notebook-controller.ts";
 
 export default class DeckController {
 
-    #givenDeck: Deck;
-    #deckView: deckMenuView;
-    #createCardView?: createCardView;
-    #viewCards?: DisplayCardsView;
-    constructor(deck:Deck) {
+    #givenDeck: Deck;                       //the deck instance we give commands to
+    #deckView: deckMenuView;                //the deck menu view through which user interact with controller
+    #createCardView?: createCardView;        //dialog for creating a card
+    #viewCards?: DisplayCardsView;             //New view to specifically look thorough cards
+    #notebookController: NotebookController;       //reference back to the parent controller
+
+    constructor(deck:Deck, noteController: NotebookController) {
         this.#givenDeck = deck;
         this.#deckView = new deckMenuView(this.#givenDeck, this);
-
+        this.#notebookController = noteController;
     }
 
     //Create card view is a pop up dialog
@@ -44,9 +47,7 @@ export default class DeckController {
         //todo
     }
 
-    exitDeckMenu(): void {
-        //todo
-    }
+    //Leaves the deck menu, (basically deletes it) unregisters it as a listener to the specific deck instance (TODO) is unregistering really that necessary
 
     //View cards is a separate screen
     //Just toggle between the deck and card view don't destroy either one
@@ -77,10 +78,16 @@ export default class DeckController {
         //todo
     }
 
+    //Leaves the deck menu, (basically deletes it) unregisters it as a listener to the specific deck instance (TODO) is unregistering really that necessary
+    exitDeckMenu(): void{
+        this.#destroy();
+        this.#notebookController.exitDeck();
+    }
+
     //Call this only when the user is leaving this deck entirely (e.g. going
     //back to a list of all decks).
-    // views are torn down and listeners unregistered, as opposed to
-    destroy(): void {
+    // views are torn down and listeners unregistered, as opposed to just hidden
+    #destroy(): void {
         this.#deckView.destroy();
         this.#viewCards?.destroy();         //does nothing if hte viewCards is undefined
     }
