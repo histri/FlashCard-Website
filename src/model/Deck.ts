@@ -75,6 +75,7 @@ export default class Deck {
         this.#cards.push(card);
         //TODO persist data
         //Notify all listeners
+        //TODO want to seperate the deck listener and the notebook listener
         this.#notifyAll();
     }
 
