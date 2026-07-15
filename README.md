@@ -19,6 +19,12 @@ useful features are locked behind paywalls. This is my attempt at making somethi
 
 Since this is a learning project no LLMs were used to write any lines of code.
 
+# Running
+
+git clone https://github.com/histri/FlashCard-Website.git
+cd FlashCard-Website
+npm install
+npx vite
 
 # Progress Tracker
 
@@ -32,6 +38,7 @@ Since this is a learning project no LLMs were used to write any lines of code.
 * Identified serisous issues with my implementation of MVC and observer pattern worked to fix it 
 * Added a Deck Menu and very basic card view with flipping cards 
 * Learned about merging git branches
+* Can now switch between Notebook and deck views without memory leaks
 
 ![First iteration of Adding decks](images/makeDeck.PNG) 
 ![..](images/addDeck.PNG)

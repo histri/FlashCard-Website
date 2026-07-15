@@ -27,7 +27,7 @@ export default class deckMenuView {
                     <button id="delete-card">Delete Card</button>
                     <button id ="edit-card">Edit Card</button>
                     <button id="view-cards">View Cards</button>
-                    <button id="exit-deck-menu">Back To Menu</button>
+                    <button id="exit-deck-menu">Back To Main Menu</button>
                 </div>
                 <!--The main deck view will show previews of the cards the user has added--> 
                 <h3>Card Preview</h3>

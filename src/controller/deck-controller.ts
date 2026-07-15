@@ -42,9 +42,10 @@ export default class DeckController {
        this.closeCreateCardView();
     }
 
+    //For this to work must assume all cards have unique names
+    deleteCard(title:string): void {
 
-    deleteCard(): void {
-        //todo
+        })
     }
 
     //Leaves the deck menu, (basically deletes it) unregisters it as a listener to the specific deck instance (TODO) is unregistering really that necessary

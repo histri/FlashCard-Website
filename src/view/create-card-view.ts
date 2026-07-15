@@ -15,7 +15,7 @@ export default class createCardView {
         this.#dialog = document.createElement("dialog");
         this.#dialog.id = "createCardView";
         this.#dialog.innerHTML = `
-            <span id="error"></span><br />
+            <span id="error"></span><br />     
                <h2>New Card</h2>
                <label for="card-title">Card Title</label>
                <input type="text" id="card-title" />

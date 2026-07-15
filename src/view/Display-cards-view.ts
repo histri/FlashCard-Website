@@ -40,7 +40,7 @@ export default class DisplayCardsView {
         this.#rootEl.id = "view-cards";
         this.#rootEl.innerHTML = `
             <div class = "view-header">
-                <button id="exit-view-cards">Back To Menu</button>
+                <button id="exit-view-cards">Back To ${this.#deck.name} Deck Menu</button>
                 <!--Would be cool to have a progress tracker at the top-->
             </div>
             
@@ -84,7 +84,6 @@ export default class DisplayCardsView {
         this.#renderCurrentCard();
     }
 
-    //TODO I can already see there will be an issue in terms of viewing cards when switching back and forth between deck and card view, especially if a card is deleted
 
     //Shows the current card
     #renderCurrentCard(): void {
