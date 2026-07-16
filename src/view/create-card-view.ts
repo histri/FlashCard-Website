@@ -29,9 +29,7 @@ export default class createCardView {
         this.#dialog.querySelector("#addCardBtn")!.
             addEventListener("click", () => {this.#addCard()});
         //Close the dialog
-        this.#dialog.querySelector("#closeBtn")!.
-
-            addEventListener("click", () => {
+        this.#dialog.querySelector("#closeBtn")!.addEventListener("click", () => {
                 //remove the text the user might have entered before clicking close
                 this.#dialog.querySelector<HTMLInputElement>("#card-title")!.value = "";
                 this.#dialog.querySelector<HTMLInputElement>("#card-info")!.value = "";

@@ -1,6 +1,6 @@
 import type FlashCard from "./FlashCard.ts";
 import {assert} from "../assertions.ts";
-import {DuplicateException, InvalidNameException} from "./exceptions.ts";
+import {CardNotFoundException, DuplicateException, InvalidNameException} from "./exceptions.ts";
 import type Listener from "./Listener.ts";
 
 //Instances of this class serve as decks of cards that user can go through.
@@ -95,10 +95,35 @@ export default class Deck {
         return found;
     }
 
+    //Find a card in the deck based on title and deletes it
+    //TODO optimise this method
+    removeCard(title: string): void  {
+        if(title.length === 0){
+            throw new InvalidNameException();
+        }
 
-    removeCard(): boolean {
-        //
-        return false;
+        //using while loop to not go through the whole array for no reason
+        let i = 0;              //index of the card we will delete in the deck
+
+        while(i < this.#cards.length && this.cards.at(i)?.titleSide !== title){
+            i++;
+        }
+
+        if(i === this.cards.length){
+            throw new CardNotFoundException;
+        }
+
+        //remove the single card at index i
+        //https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array-in-javascript
+        //remove the single card at index i
+        this.#cards.splice(i, 1);
+
+        //TODO persist data
+        //Notify all listeners that the deck changed
+        this.#notifyAll();
+
+        //check invariants
+        this.#checkDeck();
     }
 
 

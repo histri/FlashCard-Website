@@ -47,7 +47,7 @@ export default class deckMenuView {
         this.#rootEl.querySelector("#add-card")!
             .addEventListener("click", () => this.#controller.showCreateCardView());
         this.#rootEl.querySelector("#delete-card")!
-            .addEventListener("click", () => this.#controller.deleteCard());
+            .addEventListener("click", () => this.#controller.showDeleteCardView());
         this.#rootEl.querySelector("#exit-deck-menu")!
             .addEventListener("click", () => this.#controller.exitDeckMenu());
         this.#rootEl.querySelector("#view-cards")!

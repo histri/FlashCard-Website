@@ -6,12 +6,14 @@ import createCardView from "../view/create-card-view.ts";
 import FlashCard from "../model/FlashCard.ts";
 import DisplayCardsView from "../view/Display-cards-view.ts";
 import  NotebookController from "./notebook-controller.ts";
+import deleteCardView from "../view/delete-card-view.ts";
 
 export default class DeckController {
 
     #givenDeck: Deck;                       //the deck instance we give commands to
     #deckView: deckMenuView;                //the deck menu view through which user interact with controller
     #createCardView?: createCardView;        //dialog for creating a card
+    #deleteCardView?: deleteCardView;           //dialog for deleting a card
     #viewCards?: DisplayCardsView;             //New view to specifically look thorough cards
     #notebookController: NotebookController;       //reference back to the parent controller
 
@@ -42,10 +44,21 @@ export default class DeckController {
        this.closeCreateCardView();
     }
 
+
+    showDeleteCardView() {
+        if(this.#deleteCardView === undefined) {
+            this.#deleteCardView = new deleteCardView(this);
+        }
+    }
+
+    //TODO lowkey dont need this method
+    closeDeleteCardView(){
+        this.#deleteCardView = undefined;
+    }
     //For this to work must assume all cards have unique names
     deleteCard(title:string): void {
-
-
+        this.#givenDeck.removeCard(title);
+        this.closeDeleteCardView();
     }
 
     //Leaves the deck menu, (basically deletes it) unregisters it as a listener to the specific deck instance (TODO) is unregistering really that necessary
