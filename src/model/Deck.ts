@@ -1,6 +1,6 @@
 import type FlashCard from "./FlashCard.ts";
 import {assert} from "../assertions.ts";
-import {InvalidNameException} from "./exceptions.ts";
+import {DuplicateException, InvalidNameException} from "./exceptions.ts";
 import type Listener from "./Listener.ts";
 
 //Instances of this class serve as decks of cards that user can go through.
@@ -68,15 +68,31 @@ export default class Deck {
 
     //Current methods that I want to implement
 
-    //Add a card to the deck
+    //Add a card to the deck (cards must have unique names)
     //not sure about paramters yet, maybe name or number(id) of the deck
     //return boolean - whether operation was successful
     addCard(card : FlashCard): void{
-        this.#cards.push(card);
-        //TODO persist data
-        //Notify all listeners
-        //TODO want to seperate the deck listener and the notebook listener
-        this.#notifyAll();
+        //Check if the card duplicate already exists only push if it doesnt exist
+        if(this.#isCardDuplicate(card)){
+            throw new DuplicateException();
+        }else{
+            this.#cards.push(card);
+            //TODO persist data
+            //Notify all listeners
+            //TODO want to seperate the deck listener and the notebook listener
+            this.#notifyAll();
+        }
+    }
+
+    //Private function to check whether a created card has a duplicate name to one that is already in the list
+    #isCardDuplicate(card: FlashCard): boolean {
+        let found: boolean = false;
+        for(let i = 0; i < this.#cards.length; i++){
+            if(this.cards.at(i)?.titleSide === card.titleSide){
+                found = true;
+            }
+        }
+        return found;
     }
 
 

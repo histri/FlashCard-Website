@@ -1,7 +1,7 @@
 //This view pops up when user clicks create a card in the deckmenu view
 
 import type DeckController from "../controller/deck-controller.ts";
-import {InvalidInfoException, InvalidNameException} from "../model/exceptions.ts";
+import {DuplicateException, InvalidInfoException, InvalidNameException} from "../model/exceptions.ts";
 
 export default class createCardView {
 
@@ -72,6 +72,11 @@ export default class createCardView {
                 this.#dialog.querySelector("#error")!
                     .textContent = "Invalid info, info must have at least one letter (e.g., powerhouse of the cell).";
 
+            }else if(e instanceof DuplicateException){
+                this.#dialog.querySelector<HTMLInputElement>("#card-title")!
+                    .setAttribute('style', 'border-color:red;');
+                this.#dialog.querySelector("#error")!
+                    .textContent = "Invalid title, titles must be unique";
             }else{
                 console.log("Unexpected error");
             }

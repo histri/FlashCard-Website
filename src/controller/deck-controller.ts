@@ -45,7 +45,7 @@ export default class DeckController {
     //For this to work must assume all cards have unique names
     deleteCard(title:string): void {
 
-        })
+
     }
 
     //Leaves the deck menu, (basically deletes it) unregisters it as a listener to the specific deck instance (TODO) is unregistering really that necessary
