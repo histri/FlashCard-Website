@@ -121,6 +121,8 @@ export default class NoteView {
     #addDeck(){
 
         let name = this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!.value;
+        //trim the spaces around the name of deck
+        name = name.trim();
         try{
             this.#controller.addDeck(name);
             //assuming success remove the dialog from the page

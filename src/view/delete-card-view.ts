@@ -43,6 +43,8 @@ export default class deleteCardView {
 
     #deleteCard() {
         let cardTitle:string = this.#dialog.querySelector<HTMLInputElement>("input#card-title")!.value;
+        //Trim the spaces around the input - not an issue since creating a card also trims spaces
+        cardTitle = cardTitle.trim();
 
         //Ask the controller to find and delete the given card
         try{

@@ -50,6 +50,9 @@ export default class createCardView {
         //take the user input
         let title:string = this.#dialog.querySelector<HTMLInputElement>("input#card-title")!.value;
         let infoSide:string = this.#dialog.querySelector<HTMLInputElement>("input#card-info")!.value;
+        //Trim the trailing space in front and back of text
+        title = title.trim();
+        infoSide = infoSide.trim();
         try{
             //ask the controller to add a new card with given parameters
             this.#controller.addToDeck(title, infoSide);
