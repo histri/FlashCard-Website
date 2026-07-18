@@ -105,9 +105,10 @@ export default class DeckController {
     }
 
     //For this to work must assume all cards have unique names
-    editCard(): void {
-
-
+    updateCard(oldTitle: string, newTitle: string, newInfo:string): void {
+        this.#givenDeck.editCard(oldTitle, newTitle, newInfo);
+        //view was opened by deck menu
+        this.closeEditCardView();
     }
 
 

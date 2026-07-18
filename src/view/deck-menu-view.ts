@@ -53,7 +53,7 @@ export default class deckMenuView {
         this.#rootEl.querySelector("#view-cards")!
             .addEventListener("click", () => this.#controller.viewCards());
         this.#rootEl.querySelector("#edit-card")!
-            .addEventListener("click", () => this.#controller.editCards());
+            .addEventListener("click", () => this.#controller.showEditCardView());
 
         //When Deck will have something persisted we will need to update the view immediately
         //      after initialization

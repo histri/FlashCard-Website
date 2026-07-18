@@ -2,12 +2,18 @@
 
 import DeckController from "../controller/deck-controller.ts";
 import type FlashCard from "../model/FlashCard.ts";
-import {CardNotFoundException} from "../model/exceptions.ts";
+import {
+    CardNotFoundException,
+    DuplicateException,
+    InvalidInfoException,
+    InvalidNameException
+} from "../model/exceptions.ts";
 
 export default class EditCardView  {
 
-    #cardTitle: string;
-    #cardInfo: string;
+
+    #card?: FlashCard;          // the card currently being edited
+    #cardTitle?: string;
     #controller: DeckController;
     #selectCardDialog: HTMLDialogElement;
     #editCardDialog: HTMLDialogElement;
@@ -30,6 +36,9 @@ export default class EditCardView  {
         this.#selectCardDialog.querySelector("#EditCardBtn")!.
         addEventListener("click", () => {this.#selectCardToEdit();});
 
+        this.#selectCardDialog.querySelector("#closeBtn")!.
+        addEventListener("click", () => {this.#closeSelectDialog();});
+
         this.#editCardDialog = document.createElement("dialog");
         this.#editCardDialog.id = "EditCardDialog";
         this.#editCardDialog.innerHTML = `
@@ -42,9 +51,12 @@ export default class EditCardView  {
             <button id="saveCardBtn">Save</button>
             <button id="closeBtn">Close</button>
         `;
-        this.#editCardDialog.querySelector("#SaveCardBtn")!.
-        addEventListener("click", () => {})
 
+        this.#editCardDialog.querySelector("#saveCardBtn")!.
+        addEventListener("click", () => {this.#editCard();});
+
+        this.#editCardDialog.querySelector("#closeBtn")!.
+        addEventListener("click", () => {this.#closeEditDialog();});
         document.body.appendChild(this.#selectCardDialog);
         document.body.appendChild(this.#editCardDialog);
         //show the dialog to select the card to edit
@@ -53,19 +65,19 @@ export default class EditCardView  {
     }
 
     #selectCardToEdit(){
-        this.#cardTitle = this.#selectCardDialog
-            .querySelector<HTMLInputElement>("input#card-title")!.value;
-        this.#cardTitle = this.#cardTitle.trim();
 
+        let title = this.#selectCardDialog
+            .querySelector<HTMLInputElement>("input#card-title")!.value;
+        title = title.trim();
         try {
-            //get the card that we want to edit - or exception if it doesnt exist
-            const card: FlashCard = this.#controller.findCardByTitle(this.#cardTitle);
-            //get the title from the card as well
-            this.#cardTitle = card.titleSide;
+
+            //get the card  to edit - or exception if it doesnt exist
+            this.#card = this.#controller.findCardByTitle(title);
+            this.#cardTitle = this.#card.titleSide; // keep the original title as our lookup key
 
             // pre-fill the edit dialog with existing values
-            this.#editCardDialog.querySelector<HTMLInputElement>("#edit-title")!.value = card.titleSide;
-            this.#editCardDialog.querySelector<HTMLInputElement>("#edit-info")!.value = card.infoSide;
+            this.#editCardDialog.querySelector<HTMLInputElement>("#edit-title")!.value = this.#card.titleSide;
+            this.#editCardDialog.querySelector<HTMLInputElement>("#edit-info")!.value = this.#card.infoSide;
 
             //Now show the dialog to actually edit the card
             this.#selectCardDialog.close();
@@ -88,16 +100,47 @@ export default class EditCardView  {
         //the user could have technically leave the input the same as it was
         let newTitle = this.#editCardDialog
             .querySelector<HTMLInputElement>("#edit-title")!.value.trim();
+        //don't care what it is as long as not blank
         let newInfo = this.#editCardDialog
             .querySelector<HTMLInputElement>("#edit-info")!.value.trim();
-
         try{
-
+            this.#controller.updateCard(this.#cardTitle!, newTitle, newInfo);
+            this.#editCardDialog.close();
+            this.#controller.closeEditCardView();
         }catch(e: any){
-
+            if (e instanceof InvalidNameException) {
+                this.#editCardDialog.querySelector<HTMLInputElement>("#edit-title")!
+                    .setAttribute('style', 'border-color:red;');
+                this.#editCardDialog.querySelector("#error")!
+                    .textContent = "Invalid title, titles must have at least one letter.";
+            } else if (e instanceof InvalidInfoException) {
+                this.#editCardDialog.querySelector<HTMLInputElement>("#edit-info")!
+                    .setAttribute('style', 'border-color:red;');
+                this.#editCardDialog.querySelector("#error")!
+                    .textContent = "Invalid info, info must have at least one letter.";
+            } else if (e instanceof DuplicateException) {
+                this.#editCardDialog.querySelector<HTMLInputElement>("#edit-title")!
+                    .setAttribute('style', 'border-color:red;');
+                this.#editCardDialog.querySelector("#error")!
+                    .textContent = "Another card already has that title.";
+            } else {
+                console.log("Unexpected error");
+            }
         }
 
 
+    }
+    #closeSelectDialog(): void {
+        this.#selectCardDialog.querySelector<HTMLInputElement>("#card-title")!.value = "";
+        this.#selectCardDialog.close();
+        this.#controller.closeEditCardView();
+    }
+
+    #closeEditDialog(): void {
+        this.#editCardDialog.querySelector<HTMLInputElement>("#edit-title")!.value = "";
+        this.#editCardDialog.querySelector<HTMLInputElement>("#edit-info")!.value = "";
+        this.#editCardDialog.close();
+        this.#controller.closeEditCardView();
     }
 
 

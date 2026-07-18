@@ -48,4 +48,18 @@ export default class FlashCard {
         return this.#infoSide;
     }
 
+    editItself(newTitle: string, newInfo:string): void {
+        // check preconditions BEFORE mutating anything
+        if (newTitle.length === 0) {
+            throw new InvalidNameException();
+        }
+        if (newInfo.length === 0) {
+            throw new InvalidInfoException();
+        }
+        this.#titleSide = newTitle;
+        this.#infoSide = newInfo;
+        // check invariants
+        this.#checkCard();
+    }
+
 }

@@ -97,6 +97,34 @@ export default class Deck {
         return card;
     }
 
+
+    editCard(oldTitle: string, newTitle: string, newInfo: string): void {
+        //find the card we want to edit (throws CardNotFoundException if missing)
+        let card = this.getCard(oldTitle);
+
+        //check if any OTHER card already has the new title
+        let isDuplicate: boolean = false;
+        for (let i = 0; i < this.#cards.length; i++) {
+            let otherCard = this.#cards.at(i);
+            //skip comparing the card against itself
+            if (otherCard !== card && otherCard?.titleSide === newTitle) {
+                isDuplicate = true;
+            }
+        }
+        if (isDuplicate) {
+            throw new DuplicateException();
+        }
+
+        //update the card - throws InvalidNameException / InvalidInfoException if invalid
+        card.editItself(newTitle, newInfo);
+
+        //TODO persist data
+        this.#notifyAll();
+
+        //check invariants
+        this.#checkDeck();
+    }
+
     //Private function to check whether a created card has a duplicate name to one that is already in the list
     #isCardDuplicate(card: FlashCard): boolean {
         let found: boolean = false;
