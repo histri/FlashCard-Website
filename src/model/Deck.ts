@@ -83,6 +83,19 @@ export default class Deck {
             this.#notifyAll();
         }
     }
+    //get a flashcard instance by the title
+    getCard(title: string): FlashCard {
+        let card: FlashCard| undefined = undefined;
+        for(let i = 0; i < this.#cards.length; i++){
+            if(this.cards.at(i)?.titleSide === title){
+                card = this.#cards[i];
+            }
+        }
+        if (card === undefined) {
+            throw new CardNotFoundException();
+        }
+        return card;
+    }
 
     //Private function to check whether a created card has a duplicate name to one that is already in the list
     #isCardDuplicate(card: FlashCard): boolean {

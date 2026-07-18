@@ -7,6 +7,7 @@ import FlashCard from "../model/FlashCard.ts";
 import DisplayCardsView from "../view/Display-cards-view.ts";
 import  NotebookController from "./notebook-controller.ts";
 import deleteCardView from "../view/delete-card-view.ts";
+import editCardView from "../view/edit-card-view.ts";
 
 export default class DeckController {
 
@@ -14,6 +15,7 @@ export default class DeckController {
     #deckView: deckMenuView;                //the deck menu view through which user interact with controller
     #createCardView?: createCardView;        //dialog for creating a card
     #deleteCardView?: deleteCardView;           //dialog for deleting a card
+    #editCardView?: editCardView;
     #viewCards?: DisplayCardsView;             //New view to specifically look thorough cards
     #notebookController: NotebookController;       //reference back to the parent controller
 
@@ -21,6 +23,10 @@ export default class DeckController {
         this.#givenDeck = deck;
         this.#deckView = new deckMenuView(this.#givenDeck, this);
         this.#notebookController = noteController;
+    }
+
+    findCardByTitle(title: string): FlashCard {
+        return this.#givenDeck.getCard(title); // may throw CardNotFoundException
     }
 
     //Create card view is a pop up dialog
@@ -81,6 +87,11 @@ export default class DeckController {
 
     }
 
+    showEditCardView() {
+        if(this.#editCardView === undefined) {
+            this.#editCardView = new editCardView(this);
+        }
+    }
     //Close the view for flipping through flashcards, go back to the deck menu view.
     //Both views already exist - just toggle visibility, don't recreate either one.
     exitViewCards():void{
@@ -88,9 +99,17 @@ export default class DeckController {
         this.#deckView.show();
     }
 
-    editCards():void{
-        //todo
+    //TODO lowkey dont need this method
+    closeEditCardView(){
+        this.#editCardView = undefined;
     }
+
+    //For this to work must assume all cards have unique names
+    editCard(): void {
+
+
+    }
+
 
     //Leaves the deck menu, (basically deletes it) unregisters it as a listener to the specific deck instance (TODO) is unregistering really that necessary
     exitDeckMenu(): void{
