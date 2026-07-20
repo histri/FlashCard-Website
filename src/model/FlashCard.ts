@@ -11,7 +11,7 @@ export default class FlashCard {
     //TODO possible future functionality - draw input,
 
 
-    #id: number;                //for future when woking with DB persistence
+    //#id: number;                //for future when woking with DB persistence
     #titleSide: string;             //front side of the card
     #infoSide: string;      //back side of the card that gets revealed later
 

@@ -7,7 +7,7 @@ import type Listener from "./Listener.ts";
 //TODO future feature to copy cards, transfer from one deck to another
 export default class Deck {
     #name: string;          //name of the deck (ex: Bio)
-    #id: number;            //will probably be given by database
+   // #id: number;            //will probably be given by database
     #cards: Array<FlashCard>;    //the cards in the deck
     //TODO should I really register listeners if there is only one view attached
     #listeners: Array<Listener>;

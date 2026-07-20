@@ -4,9 +4,9 @@ import type Listener from "./Listener.ts";
 //Main Domain class in the current hierarchy NoteBook > Deck > Cards
 
 export  default class NoteBook {
-    #id: number;                //current not used, could be used in case of multiple accounts
+    //#id: number;                //current not used, could be used in case of multiple accounts
     #decks: Array<Deck>;        //array of card decks that the notebook has
-    #numOfDecks: number;      //just size of the deck array
+   // #numOfDecks: number;      //just size of the deck array
     #listeners: Array<Listener>;    //listeners listen to the updates on this domain class
 
 
@@ -46,9 +46,9 @@ export  default class NoteBook {
         this.#notifyAll();
     }
 
-    deleteDeck(deck: Deck): void {
-        //TODO implement
-    }
+    // deleteDeck(deck: Deck): void {
+    //     //TODO implement
+    // }
 
     /*
             GETTERS

@@ -3,21 +3,17 @@
 import NoteBook from "../model/NoteBook.ts";
 import NoteView from "../view/notebook-view.ts";
 import Deck from "../model/Deck.ts";
-import deckMenuView from "../view/deck-menu-view.ts";
-import createCardView from "../view/create-card-view.ts";
 import DeckController from "./deck-controller.ts";
 
 export default class NotebookController {
 
     #notebook: NoteBook;
-    #deckController: DeckController;
+    #deckController: DeckController|null;
     #notebookView: NoteView;
-    #deckMENUview: deckMenuView;
-    #createCardView?: createCardView;
     constructor() {
         this.#notebook = new NoteBook();
         this.#notebookView = new NoteView(this.#notebook, this);
-
+        this.#deckController = null;
     }
 
     //Adds a new deck to the current notebook
@@ -48,9 +44,9 @@ export default class NotebookController {
         this.#notebookView.show();
     }
 
-    deleteDeck(deck:Deck): void {
-
-    }
+    // deleteDeck(deck:Deck): void {
+    //
+    // }
 
 
 }
