@@ -14,15 +14,16 @@ export default class createCardView {
         //add the dialog details
         this.#dialog = document.createElement("dialog");
         this.#dialog.id = "createCardView";
+        //TODO important that not having a label where there is a place holder is bad practice
         this.#dialog.innerHTML = `
             <span id="error"></span><br />     
                <h2>New Card</h2>
-               <label for="card-title">Card Title</label>
-               <input type="text" id="card-title" />
-               <label for="card-info">Card Info</label>
-               <input type="text" id="card-info" />
-               <button id = "addCardBtn">Create</button>
-               <button id = "closeBtn">Close</button>
+               <input type="text" id="card-title" placeholder="Card Title" />
+                <textarea id="card-info" rows="5" placeholder="Card Info"></textarea>
+                <div class="dialog-buttons">
+                   <button id = "addCardBtn">Create</button>
+                   <button id = "closeBtn">Close</button>
+               </div>
         `;
 
         //Submit input
@@ -30,6 +31,7 @@ export default class createCardView {
             addEventListener("click", () => {this.#addCard()});
         //Close the dialog
         this.#dialog.querySelector("#closeBtn")!.addEventListener("click", () => {
+                console.log("Pressed the close button");
                 //remove the text the user might have entered before clicking close
                 this.#dialog.querySelector<HTMLInputElement>("#card-title")!.value = "";
                 this.#dialog.querySelector<HTMLInputElement>("#card-info")!.value = "";
@@ -37,7 +39,7 @@ export default class createCardView {
                 this.#controller.closeCreateCardView();
             });
         //Add to the page
-        //TODO i dont think this is right
+        //TODO make sure this view gets DELETED when closed by controller
         document.body.appendChild(this.#dialog);
         this.#dialog.showModal();
 
@@ -49,7 +51,7 @@ export default class createCardView {
     #addCard(): void {
         //take the user input
         let title:string = this.#dialog.querySelector<HTMLInputElement>("input#card-title")!.value;
-        let infoSide:string = this.#dialog.querySelector<HTMLInputElement>("input#card-info")!.value;
+        let infoSide:string = this.#dialog.querySelector<HTMLInputElement>("textarea#card-info")!.value;
         //Trim the trailing space in front and back of text
         title = title.trim();
         infoSide = infoSide.trim();
