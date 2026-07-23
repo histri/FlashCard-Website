@@ -42,8 +42,8 @@ export default class NoteView {
         this.#addDeckDialog.innerHTML = `
                <span id="error"></span><br />
                <h2>New Deck</h2>
-               <label for="deck-name">Deck Name</label>
-               <input type="text" id="deck-name" />
+               <!--Should still probably have a label for accesibility --> 
+               <input type="text" id="deck-name" placeholder="Deck Name"/>
                <button id = "addDeckBtn">Create</button>
                <button id = "closeDeckBtn">Close</button> 
         `;

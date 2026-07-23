@@ -19,8 +19,8 @@ export default class deleteCardView {
         this.#dialog.innerHTML = `
             <span id="error"></span><br />  
             <h2>Input the name of the Card to delete</h2>
-             <label for="card-title">Card Title</label>
-             <input type="text" id="card-title" />
+            <!--Should still probably have a label for accesibility --> 
+             <input type="text" id="card-title" placeholder="Card Title" />
                <button id = "deleteCardBtn">Delete</button>
                 <button id = "closeBtn">Close</button>
         `

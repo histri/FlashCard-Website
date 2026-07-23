@@ -26,10 +26,13 @@ export default class EditCardView  {
         this.#selectCardDialog.innerHTML = `
             <span id="error"></span><br />  
             <h2>Enter the name of the Card to edit</h2>
-             <label for="card-title">Card Title</label>
-             <input type="text" id="card-title" />
-               <button id = "EditCardBtn">Edit</button>
+             <!-- Should still have a label for accesibility make it look nicer though -->
+             <input type="text" id="card-title" placeholder="Card Title"/>
+             <div class="dialog-buttons">
+             <button id = "EditCardBtn">Edit</button>
                 <button id = "closeBtn">Close</button>
+             </div>
+               
         `
         //TODO select card interface?
         //Submit input for selecting the card
@@ -44,12 +47,16 @@ export default class EditCardView  {
         this.#editCardDialog.innerHTML = `
             <span id="error"></span><br />
             <h2>Edit Card</h2>
-            <label for="edit-title">Card Title</label>
-            <input type="text" id="edit-title" />
-            <label for="edit-info">Card Info</label>
-            <input type="text" id="edit-info" />
-            <button id="saveCardBtn">Save</button>
-            <button id="closeBtn">Close</button>
+            <!-- Should still have a label for accesibility make it look nicer though -->
+            
+            <input type="text" id="edit-title" placeholder="Card Title"/>
+            <!-- Should still add a nice label --> 
+            <textarea id="edit-info" rows="5" placeholder="Card Info"></textarea>
+            <div class="dialog-buttons">
+                <button id="saveCardBtn">Save</button>
+                <button id="closeBtn">Close</button>
+            </div>
+            
         `;
 
         this.#editCardDialog.querySelector("#saveCardBtn")!.
@@ -102,7 +109,7 @@ export default class EditCardView  {
             .querySelector<HTMLInputElement>("#edit-title")!.value.trim();
         //don't care what it is as long as not blank
         let newInfo = this.#editCardDialog
-            .querySelector<HTMLInputElement>("#edit-info")!.value.trim();
+            .querySelector<HTMLInputElement>("textarea#edit-info")!.value.trim();
         try{
             this.#controller.updateCard(this.#cardTitle!, newTitle, newInfo);
             this.#editCardDialog.close();

@@ -147,3 +147,13 @@ textarea {
     flex: 1;
 }
 
+/* Edit card dialog want to look visially consistent with the createCardView - TODO make a class that holds them both*/
+#EditCardDialog {
+    flex-direction: column;
+    gap: 10px;
+    min-width: 300px;
+}
+#EditCardDialog[open] {
+    display: flex;
+}
+
