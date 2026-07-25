@@ -4,11 +4,6 @@ import type Deck from "../model/Deck.ts";
 import type FlashCard from "../model/FlashCard.ts";
 
 //Note choosing to not reset the card view to first card if user goes back to deck view
-// TODO     however this might be an issue if they delete a card
-//      YES - big bug - make 2 cards, delete one, view still shows the 'next' button as a available
-//      possible fixes - give the view a notify, delete it on closure and just create a new one each time is is open
-//      moving on from it for now
-
 
 export default class DisplayCardsView {
 
@@ -37,7 +32,8 @@ export default class DisplayCardsView {
         this.#cards = deck.cards;
         this.#currIndex = 0;
         this.#flipped = false;
-        //Note I don't think I need to register this view as a listener to the deck instance
+        //register as a listener to the deck
+        this.#deck.registerListener(this);
 
         //make the main structure of the view
         this.#rootEl = document.createElement("div");
@@ -88,6 +84,21 @@ export default class DisplayCardsView {
         this.#renderCurrentCard();
     }
 
+    notify(): void {
+        this.#cards = this.#deck.cards;
+
+        if (this.#cards.length === 0) {
+            //TODO handle empty-deck state - currently controller prevents it
+            return;
+        }
+
+        if (this.#currIndex > this.#cards.length - 1) {
+            this.#currIndex = this.#cards.length - 1;
+        }
+
+        this.#renderCurrentCard();
+    }
+
 
     //Shows the current card
     #renderCurrentCard(): void {
@@ -131,14 +142,6 @@ export default class DisplayCardsView {
         if(this.#currIndex < this.#cards.length-1){
             this.#currIndex++;
             this.#renderCurrentCard();
-            //disable the next button if the user hits the last card
-            if(this.#currIndex == this.#cards.length-1){
-                this.#nextBtn.disabled = true;
-            }
-            //enable the prev Card is enabled if it was disabled
-            if(this.#prevBtn.disabled){
-                this.#prevBtn.disabled = false;
-            }
         }else{
             //Hopefully this never gets hit since the button gets disabled
             console.log("tried to exceed deck size");
@@ -151,13 +154,6 @@ export default class DisplayCardsView {
         if(this.#currIndex > 0){
             this.#currIndex--;
             this.#renderCurrentCard();
-            if(this.#currIndex == 0){
-                this.#prevBtn.disabled = true;
-            }
-            //enable the next Card is enabled if it was disabled
-            if(this.#nextBtn.disabled){
-                this.#nextBtn.disabled = false;
-            }
         }else {
             console.log("can't go to a previous card, since we at start of deck");
         }
@@ -172,9 +168,9 @@ export default class DisplayCardsView {
         this.#rootEl.style.display = "none";
     }
 
-    //Fully tear down this view's DOM. This view doesn't register itself as a
-    //Deck listener, so there's no unregister step needed
+    //Fully tear down this view's DOM
     destroy(): void {
+        this.#deck.unregisterListener(this);
         this.#rootEl.remove();
     }
 
