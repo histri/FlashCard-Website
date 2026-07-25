@@ -5,6 +5,10 @@ import type FlashCard from "../model/FlashCard.ts";
 
 //Note choosing to not reset the card view to first card if user goes back to deck view
 // TODO     however this might be an issue if they delete a card
+//      YES - big bug - make 2 cards, delete one, view still shows the 'next' button as a available
+//      possible fixes - give the view a notify, delete it on closure and just create a new one each time is is open
+//      moving on from it for now
+
 
 export default class DisplayCardsView {
 
@@ -57,7 +61,7 @@ export default class DisplayCardsView {
                     <div class="answer-buttons">
                         <!-- TODO definitely want a wrong correct buttons-->
                         <!--TODO maybe disable the buttons before the user sees the other side? -->
-                        <button id="prev-btn" disabled >Previous Card</button>  <!-- make sure the prev is disable by default-->
+                        <button id="prev-btn" disabled>Previous Card</button>  <!-- make sure the prev is disable by default-->
                         <button id="next-btn" >Next Card</button>
                     </div>
             </div> 
@@ -102,6 +106,14 @@ export default class DisplayCardsView {
         this.#frontEl.classList.add("visible");
         //this will reset the back to be invisible when we go to the next card
         this.#backEl.classList.remove("visible");
+
+        this.#updateNavButtons();
+    }
+
+    //Enables/disables prev and next buttons based on currIndex and cards length.
+    #updateNavButtons(): void {
+        this.#prevBtn.disabled = this.#currIndex === 0;
+        this.#nextBtn.disabled = this.#currIndex === this.#cards.length - 1;
     }
 
     //"Flips" the card to show the opposite side (Title/Info) and vice versa

@@ -88,11 +88,26 @@ dialog::backdrop {
   opacity: 0.75;
 }
 
-
+/*FLASHCARD DISPLAY */
+#view-cards {
+    /* Center the roots children */
+    display: flex;
+    flex-direction: column;
+}
 /* For the current implementation of the flashcard sides CSS controls what elements look like when they have specific classes.
-
 TypeScript controls when those classes are added or removed*/
-
+.flashcard {
+    /* Centers its children*/
+    display: flex;
+    justify-content: center;        /* centers the text horizontally */
+    align-items: center;            /*centers the element vertically*/
+    width: 350px;
+    height: 150px;
+    margin: 10px auto;          /*centers itself within its parent*/
+    padding: 25px;
+    border: 5px solid black;
+    background-color: lightpink;
+}
 /*Default for both sides the start of as invisible*/
 .flashcard-face {
     display: none;
@@ -127,6 +142,7 @@ textarea {
     box-shadow: 1px 1px 1px #999999;
 }
 
+/*CREATE CARD VIEW*/
 /*Make the title input above info input above buttons */
 #createCardView {
     flex-direction: column;
