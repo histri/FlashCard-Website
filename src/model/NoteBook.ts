@@ -1,9 +1,10 @@
 import Deck from "./Deck.ts";
 import type Listener from "./Listener.ts";
-
+import {supabase} from "../supabaseClient.ts";
 //Main Domain class in the current hierarchy NoteBook > Deck > Cards
 
 export  default class NoteBook {
+    #name : string;
     //#id: number;                //current not used, could be used in case of multiple accounts
     #decks: Array<Deck>;        //array of card decks that the notebook has
    // #numOfDecks: number;      //just size of the deck array
@@ -11,6 +12,7 @@ export  default class NoteBook {
 
 
     constructor() {
+        this.#name = "Default name";
         //TODO for now initialize empty later on need to fetch from database that a whole other problem, In comp2452 I fetched in a really round about way
         this.#decks = new Array<Deck>();
         this.#listeners = new Array<Listener>();
@@ -42,6 +44,7 @@ export  default class NoteBook {
     //TODO maybe make it return a boolean for success
     addDeck(deck: Deck): void {
         this.#decks.push(deck);
+        NoteBook.saveNote(this);
         //notify the listeners that the domain class has changed
         this.#notifyAll();
     }
@@ -57,5 +60,28 @@ export  default class NoteBook {
     get decks(): Array<Deck> {
         return this.#decks;
     }
+
+    /*DB stuff*/
+    static async saveNote(n : NoteBook): Promise<void> {
+        // Save the query result to a single variable
+        //how to make parametized queries
+        const response = await supabase
+            .from('profiles') //table name
+            .insert([
+                {
+                    username: n.#name,
+                }
+            ]);
+
+        // Access properties directly off the response object
+        if (response.error) {
+            console.error('Error saving notebook:', response.error);
+            return;
+        }
+
+        console.log('Notebook saved successfully:', response.data);
+    }
+
+
 
 }
