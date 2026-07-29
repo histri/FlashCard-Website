@@ -61,10 +61,13 @@ export  default class NoteBook {
         return this.#decks;
     }
 
-    /*DB stuff*/
+    /*
+    DB
+    */
+
     static async saveNote(n : NoteBook): Promise<void> {
-        // Save the query result to a single variable
-        //how to make parametized queries
+
+        //TODO how to make parametized queries
         const response = await supabase
             .from('profiles') //table name
             .insert([
@@ -78,8 +81,18 @@ export  default class NoteBook {
             console.error('Error saving notebook:', response.error);
             return;
         }
-
         console.log('Notebook saved successfully:', response.data);
+
+        //TODO what if notebook/deck/card got edited?
+
+        //TODO need to pass id of the object to make the foreign key constraint work
+
+        // Cascade: save each deck that belongs to this notebook, the same way
+        n.decks.forEach((deck : Deck) => {
+            // only decks that haven't been saved yet
+            // should get inserted here
+            Deck.saveDeck(deck);
+        });
     }
 
 

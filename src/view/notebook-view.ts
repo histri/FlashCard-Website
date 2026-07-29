@@ -1,7 +1,6 @@
 
 //need controller and model
 //This view implements the listener interface
-//TODO currently when pressing the add deck button the dialog is unable to open again
 import NotebookController from "../controller/notebook-controller.ts";
 import type NoteBook from "../model/NoteBook.ts";
 import {InvalidNameException} from "../model/exceptions.ts";
@@ -38,7 +37,6 @@ export default class NoteView {
         this.#addDeckDialog.id = "notebook-add-deck";
         //TODO vulnerable to XSS attacks?
 
-        //TODO maybe move the create deck dialog into its own view?
         this.#addDeckDialog.innerHTML = `
                <span id="error"></span><br />
                <h2>New Deck</h2>

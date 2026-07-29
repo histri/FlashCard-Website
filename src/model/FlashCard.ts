@@ -1,5 +1,6 @@
 import {InvalidInfoException, InvalidNameException} from "./exceptions.ts";
 import {assert} from "../assertions.ts";
+import {supabase} from "../supabaseClient.ts";
 
 export default class FlashCard {
     //Main functionality for the application
@@ -61,5 +62,37 @@ export default class FlashCard {
         // check invariants
         this.#checkCard();
     }
+
+
+    /*
+* DB stuff
+*  */
+
+    static async saveCard(card : FlashCard): Promise<void> {
+        //save the deck to the Supabase tables
+
+        const response = await supabase
+            .from('flashcards')      //table name
+            .insert([
+                {
+                    title: card.titleSide,
+                    info: card.infoSide,
+                }
+            ]);
+
+        //TODO need to get id of the parent object to make the foreign key constraint work
+
+
+        // Access properties directly off the response object
+        if (response.error) {
+            console.error('Error saving Deck:', response.error);
+            return;
+        }
+        console.log('Deck saved successfully:', response.data);
+
+        //TODO what if notebook/deck/card got edited?
+
+    }
+
 
 }

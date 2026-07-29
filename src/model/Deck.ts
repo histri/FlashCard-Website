@@ -1,7 +1,8 @@
-import type FlashCard from "./FlashCard.ts";
+import FlashCard from "./FlashCard.ts";
 import {assert} from "../assertions.ts";
 import {CardNotFoundException, DuplicateException, InvalidNameException} from "./exceptions.ts";
 import type Listener from "./Listener.ts";
+import {supabase} from "../supabaseClient.ts";
 
 //Instances of this class serve as decks of cards that user can go through.
 //TODO future feature to copy cards, transfer from one deck to another
@@ -167,6 +168,40 @@ export default class Deck {
         this.#checkDeck();
     }
 
+    /*
+    * DB stuff
+    *  */
 
+    static async saveDeck(deck: Deck): Promise<void> {
+        //save the deck to the Supabase tables
+
+        const response = await supabase
+            .from('decks')      //table name
+            .insert([
+                {
+                    deck_name: deck.name,
+                }
+            ]);
+
+        // Access properties directly off the response object
+        if (response.error) {
+            console.error('Error saving Deck:', response.error);
+            return;
+        }
+        console.log('Deck saved successfully:', response.data);
+
+        //TODO what if notebook/deck/card got edited?
+
+        //TODO need to pass id of the object to make the foreign key constraint work
+
+
+        // Cascade: save each deck that belongs to this notebook, the same way
+        deck.cards.forEach((card:FlashCard) => {
+            // only decks that haven't been saved yet
+            // should get inserted here
+            FlashCard.saveCard(card);
+        });
+
+    }
 
 }
