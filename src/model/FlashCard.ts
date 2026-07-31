@@ -91,7 +91,7 @@ export default class FlashCard {
                     {
                         title: card.titleSide,
                         info: card.infoSide,
-                        id: ownerDeckId
+                        deck_id: card.ownerId
                     }
                 ])
                 .select();

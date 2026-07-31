@@ -16,7 +16,7 @@ export  default class NoteBook {
 
 
     private constructor() {
-        this.#name = "Default name";
+        this.#name = "GRU Notebook";
         this.#decks = new Array<Deck>();
         this.#listeners = new Array<Listener>();
         //check assertions
@@ -104,7 +104,7 @@ export  default class NoteBook {
                 return;
             }
             console.log('Notebook saved successfully:', response.data);
-            n.#id = response.data[0].id;
+            n.#id = response.data[0].user_id;
         }
 
 
