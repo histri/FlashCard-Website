@@ -44,8 +44,8 @@ export default class DeckController {
     }
 
     //Add a newly created card to the deck
-    addToDeck(title:string, info: string): void {
-        let card = new FlashCard(title, info);
+    async addToDeck(title:string, info: string): Promise<void> {
+        let card = await FlashCard.build(title, info, this.#givenDeck.id!);
         this.#givenDeck.addCard(card);
        this.closeCreateCardView();
     }

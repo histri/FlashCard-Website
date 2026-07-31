@@ -7,14 +7,15 @@ import {supabase} from "../supabaseClient.ts";
 //Instances of this class serve as decks of cards that user can go through.
 //TODO future feature to copy cards, transfer from one deck to another
 export default class Deck {
+    #id? : number;          //assigned by the database
+    #ownerID: number;           //TODO not sure if this is best practice
     #name: string;          //name of the deck (ex: Bio)
-   // #id: number;            //will probably be given by database
     #cards: Array<FlashCard>;    //the cards in the deck
-    //TODO should I really register listeners if there is only one view attached
     #listeners: Array<Listener>;
-    constructor(name:string) {
+    private constructor(name:string, ownerID: number) {
         //Initialise the name of the deck
         this.#name = name;
+        this.#ownerID = ownerID;
         //check preconditions
         if (this.#name.length === 0) {
             throw new InvalidNameException;
@@ -23,6 +24,15 @@ export default class Deck {
         this.#listeners = new Array<Listener>();
         //Check invariants
         this.#checkDeck();
+    }
+
+    static async build(name:string, ownerId: number): Promise<Deck>{
+        const deck = new Deck(name, ownerId);
+
+        await Deck.saveDeck(deck, deck.#ownerID);
+
+        return deck;
+
     }
 
     #checkDeck(): void {
@@ -65,6 +75,10 @@ export default class Deck {
     }
     get size() : number {
         return this.#cards.length;
+    }
+
+    get id(): number | undefined {
+        return this.#id;
     }
 
     //Current methods that I want to implement
@@ -172,34 +186,40 @@ export default class Deck {
     * DB stuff
     *  */
 
-    static async saveDeck(deck: Deck): Promise<void> {
+    static async saveDeck(deck: Deck, ownerId: number): Promise<void> {
         //save the deck to the Supabase tables
 
-        const response = await supabase
-            .from('decks')      //table name
-            .insert([
-                {
-                    deck_name: deck.name,
-                }
-            ]);
+        //only save the deck initially if it doesnt exist in DB yet
+        if(deck.#id === undefined){
+            const response = await supabase
+                .from('decks')      //table name
+                .insert([
+                    {
+                        deck_name: deck.name, owner_user_id: ownerId
+                    }
+                ])
+                .select();
 
-        // Access properties directly off the response object
-        if (response.error) {
-            console.error('Error saving Deck:', response.error);
-            return;
+
+            // Access properties directly off the response object
+            if (response.error || response.data == null) {
+                console.error('Error saving Deck:', response.error);
+                return;
+            }
+            console.log('Deck saved successfully:', response.data);
+            deck.#id = response.data[0].id;
+
         }
-        console.log('Deck saved successfully:', response.data);
 
         //TODO what if notebook/deck/card got edited?
 
-        //TODO need to pass id of the object to make the foreign key constraint work
-
-
         // Cascade: save each deck that belongs to this notebook, the same way
         deck.cards.forEach((card:FlashCard) => {
-            // only decks that haven't been saved yet
+            // FOR NOW only cards that haven't been saved yet
             // should get inserted here
-            FlashCard.saveCard(card);
+            if(card.id === undefined){
+                FlashCard.saveCard(card, deck.#id!);
+            }
         });
 
     }

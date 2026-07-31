@@ -10,16 +10,22 @@ export default class NotebookController {
     #notebook: NoteBook;
     #deckController: DeckController|null;
     #notebookView: NoteView;
-    constructor() {
-        this.#notebook = new NoteBook();
+
+    private constructor(notebook: NoteBook) {
+        this.#notebook = notebook;
         this.#notebookView = new NoteView(this.#notebook, this);
         this.#deckController = null;
     }
 
+    static async build(): Promise<NotebookController> {
+        const notebook = await NoteBook.build();
+        return new NotebookController(notebook);
+    }
+
     //Adds a new deck to the current notebook
     //Decks hold flashcards, currently decks property is only its name
-    addDeck(deckName: string): void {
-        let deck = new Deck(deckName);
+    async addDeck(deckName: string): Promise<void> {
+        let deck = await Deck.build(deckName,this.#notebook.id!);
         this.#notebook.addDeck(deck);
         this.#notebookView.listenToDeck(deck);
     }

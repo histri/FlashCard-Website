@@ -12,15 +12,17 @@ export default class FlashCard {
     //TODO possible future functionality - draw input,
 
 
-    //#id: number;                //for future when woking with DB persistence
+    #id?: number;                //for future when woking with DB persistence
+    ownerId: number;
     #titleSide: string;             //front side of the card
     #infoSide: string;      //back side of the card that gets revealed later
 
 
-    constructor(titleSide:string, infoSide:string) {
+    private constructor(titleSide:string, infoSide:string, ownerId:number) {
         //ID will be initialised from database (not set up yet)
         this.#titleSide = titleSide;
         this.#infoSide = infoSide;
+        this.ownerId = ownerId;
         //check preconditions
         if(this.#titleSide.length ===0){
             throw new InvalidNameException();
@@ -30,6 +32,14 @@ export default class FlashCard {
         }
         //check invariants
         this.#checkCard();
+    }
+
+    static async build(titleSide: string, infoSide:string, ownerId:number): Promise<FlashCard>{
+        const card = new FlashCard(titleSide, infoSide, ownerId);
+
+        await FlashCard.saveCard(card, ownerId);
+
+        return card;
     }
 
     #checkCard() :void{
@@ -47,6 +57,9 @@ export default class FlashCard {
     }
     get infoSide(){
         return this.#infoSide;
+    }
+    get id(): number|undefined{
+        return this.#id;
     }
 
     editItself(newTitle: string, newInfo:string): void {
@@ -68,27 +81,35 @@ export default class FlashCard {
 * DB stuff
 *  */
 
-    static async saveCard(card : FlashCard): Promise<void> {
+    static async saveCard(card : FlashCard, ownerDeckId: number): Promise<void> {
         //save the deck to the Supabase tables
+        //for now only saving if id is undefined obviously will change since you can edit and delete cards
+        if(card.id === undefined){
+            const response = await supabase
+                .from('flashcards')      //table name
+                .insert([
+                    {
+                        title: card.titleSide,
+                        info: card.infoSide,
+                        id: ownerDeckId
+                    }
+                ])
+                .select();
 
-        const response = await supabase
-            .from('flashcards')      //table name
-            .insert([
-                {
-                    title: card.titleSide,
-                    info: card.infoSide,
-                }
-            ]);
-
-        //TODO need to get id of the parent object to make the foreign key constraint work
+            //TODO need to get id of the parent object to make the foreign key constraint work
 
 
-        // Access properties directly off the response object
-        if (response.error) {
-            console.error('Error saving Deck:', response.error);
-            return;
+            // Access properties directly off the response object
+            if (response.error|| response.data == undefined) {
+                console.error('Error saving Deck:', response.error);
+                return;
+            }
+
+            console.log('Deck saved successfully:', response.data);
+            card.#id = response.data[0].id;
+
         }
-        console.log('Deck saved successfully:', response.data);
+
 
         //TODO what if notebook/deck/card got edited?
 
