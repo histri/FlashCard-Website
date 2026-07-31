@@ -81,6 +81,7 @@ export default class FlashCard {
 * DB stuff
 *  */
 
+    //TODO
     static async saveCard(card : FlashCard, ownerDeckId: number): Promise<void> {
         //save the deck to the Supabase tables
         //for now only saving if id is undefined obviously will change since you can edit and delete cards
@@ -91,7 +92,7 @@ export default class FlashCard {
                     {
                         title: card.titleSide,
                         info: card.infoSide,
-                        deck_id: card.ownerId
+                        deck_id: ownerDeckId            //TODO not sure if this or card.id is correct
                     }
                 ])
                 .select();

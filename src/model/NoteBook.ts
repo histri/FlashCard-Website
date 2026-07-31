@@ -16,7 +16,7 @@ export  default class NoteBook {
 
 
     private constructor() {
-        this.#name = "GRU Notebook";
+        this.#name = "Andrii Notebook";
         this.#decks = new Array<Deck>();
         this.#listeners = new Array<Listener>();
         //check assertions
@@ -25,10 +25,22 @@ export  default class NoteBook {
 
     //For making a brand new deck
     public static async build (): Promise<NoteBook>{
-        const noteBook: NoteBook = new NoteBook();
+        let noteBook: NoteBook = null;          //todo fix var declaration
+        //Check if the notebook exists - currently no user input for user this is just to get the SELECT code working
+        //TODO get a name input later
+        let exists:boolean = await this.#noteExists("Andrii Notebook");
 
-        //save the build immediately
-        await NoteBook.saveNote(noteBook);
+        if(exists){
+            //fetch info from DB and construct based on that
+            //TODO dont forget I'll also need to take info from the other tables like deck and flashcard
+        }else{
+            //construct a new class instance
+            let noteBook = new NoteBook();
+            //save the build immediately
+            await NoteBook.saveNote(noteBook);
+
+        }
+
 
         return noteBook;
 
@@ -124,6 +136,43 @@ export  default class NoteBook {
 
         });
     }
+
+    static async #noteExists(name:string): Promise<boolean>{
+        let found : boolean = false;
+
+        //2 options
+        //SELECT * FROM profiles WHERE username = 'Andrii Notebook';
+
+        //SELECT user_id FROM profiles WHERE username = 'Andrii Notebook'; -> this is faster
+
+        const {data, error} = await supabase
+            .from('profiles')
+            .select('user_id')
+            .eq('username', name);
+
+
+        if (error || data === undefined || data === null) {
+            //no if DB gives error or undefined data
+            found = false;
+        }else if (data.length> 0){
+            //yes only if the data we get actually holds something
+            found = true;
+        }
+        return found;
+    }
+
+
+    //Template for checking if notebook/user exist
+    /*     static async userExists(name: string): Promise<void> {
+        const result = await db().query(
+            "SELECT 1 FROM dog WHERE username = $1", [name]
+        );
+        if (result.rows.length > 0) {
+            throw new DuplicateUserException();
+        }
+    }*/
+    //TODO I should really rename notebook to user makes it very confusing currently
+
 
 
     //Constructors can't be async, however i need to use async to query the database, this makes a problem since I need to assign an id
