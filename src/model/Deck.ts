@@ -224,4 +224,18 @@ export default class Deck {
 
     }
 
+    static async loadDecksForId(ownerId: number): Promise<Deck> {
+
+        let deck: Deck;
+
+        //select * where owner_user_id = ownerID
+        const {data, error} = await supabase
+            .from('decks')
+            .select('')
+            .eq('owner_user_id', ownerId)
+
+        //Construct decks that have the same owner id
+
+    }
+
 }

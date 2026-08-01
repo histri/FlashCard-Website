@@ -18,6 +18,7 @@ export default class NotebookController {
     }
 
     static async build(): Promise<NotebookController> {
+        //the controller doesnt know anything about how the Notebook gets built
         const notebook = await NoteBook.build();
         return new NotebookController(notebook);
     }

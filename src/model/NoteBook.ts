@@ -14,34 +14,47 @@ export  default class NoteBook {
    // #numOfDecks: number;      //just size of the deck array
     #listeners: Array<Listener>;    //listeners listen to the updates on this domain class
 
+    private constructor();
+    private constructor(idExists: number, nameExists: string, deckExists: Array<Deck>, listenerExists: Array<Listener> );
+    private constructor(idExists?: number, nameExists?: string, deckExists?: Array<Deck>, listenerExists?: Array<Listener> ) {
+        if(idExists === undefined) {
+            this.#name = "Andrii Notebook";
+            this.#decks = new Array<Deck>();
+            this.#listeners = new Array<Listener>();
+            //check assertions
+            this.#checkNoteBook();
+        }else{
+            //Adding '!' since we know this will be assinged to object
+            this.#id = idExists!;
+            this.#name = nameExists!;
+            this.#decks = deckExists!;
+            this.#listeners = listenerExists!;
+            this.#checkNoteBook();
+        }
 
-    private constructor() {
-        this.#name = "Andrii Notebook";
-        this.#decks = new Array<Deck>();
-        this.#listeners = new Array<Listener>();
-        //check assertions
-        this.#checkNoteBook()
     }
 
     //For making a brand new deck
+    //Letting the Model handle ALL the persistence logic
     public static async build (): Promise<NoteBook>{
-        let noteBook: NoteBook = null;          //todo fix var declaration
+        let noteBook: NoteBook;         //todo fix var declaration
         //Check if the notebook exists - currently no user input for user this is just to get the SELECT code working
         //TODO get a name input later
         let exists:boolean = await this.#noteExists("Andrii Notebook");
 
         if(exists){
             //fetch info from DB and construct based on that
+            noteBook = await NoteBook.load("Andrii Notebook");
             //TODO dont forget I'll also need to take info from the other tables like deck and flashcard
+            console.log("This note exists already")
+            throw new Error(`${exists} already`);
         }else{
             //construct a new class instance
-            let noteBook = new NoteBook();
+            noteBook = new NoteBook();
             //save the build immediately
             await NoteBook.saveNote(noteBook);
 
         }
-
-
         return noteBook;
 
     }
@@ -128,7 +141,7 @@ export  default class NoteBook {
         n.decks.forEach((deck : Deck) => {
 
             // only decks that haven't been saved yet
-            // should get inserted here, other wise if there is a change in the deck, the deck itself will handle it
+            // should get inserted here, otherwise if there is a change in the deck, the deck itself will handle it
 
             if(deck.id === undefined) {
                 Deck.saveDeck(deck, n.#id!);
@@ -172,6 +185,41 @@ export  default class NoteBook {
         }
     }*/
     //TODO I should really rename notebook to user makes it very confusing currently
+
+    static async loadNotebook(name: string) : Promise<NoteBook> {
+        //We know the notebook exists now we just need to create the new
+        let noteBook: NoteBook;
+
+        const {data, error} = await supabase
+        .from('profiles')
+        .select('user_id')
+        .eq('username', name);
+
+        if(error) {
+            console.error('Error loading notebook:', error);
+        }
+
+        if (!data || data.length === 0) {
+            console.error('Error loading notebook:', error);
+        }
+
+
+        // @ts-ignore                   - I know this value will be defined or caught
+        const id: number = data[0].user_id;
+
+        // Cascade: load this notebook's decks (which should themselves cascade to load their cards)
+        const decks: Array<Deck> = await Deck.loadDecksForNotebook(id);
+
+        // Listeners are runtime-only, never persisted — always start empty on load
+        const listeners: Array<Listener> = new Array<Listener>();
+
+        noteBook = new NoteBook(id, name, decks, listeners);
+
+        return noteBook;
+
+
+
+    }
 
 
 
