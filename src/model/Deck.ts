@@ -13,7 +13,7 @@ export default class Deck {
     #cards: Array<FlashCard>;    //the cards in the deck
     #listeners: Array<Listener>;
 
-    //Constructor overload todo is it better to just have one big constructor with ? on some of the parameters
+    //Constructor with optional parameters
     private constructor(name:string, ownerID: number, id?: number, cards?: Array<FlashCard>) {
         this.#name = name;
         this.#ownerID = ownerID;

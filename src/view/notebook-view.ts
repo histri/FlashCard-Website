@@ -13,6 +13,7 @@ export default class NoteView {
     #title: HTMLHeadingElement;
     #addDeckDialog: HTMLDialogElement;
     #addDeckButton: HTMLButtonElement;
+    #deleteDeckButton: HTMLButtonElement;
     #decksEl: HTMLUListElement;
 
     constructor(note: NoteBook, controller: NotebookController) {
@@ -30,6 +31,12 @@ export default class NoteView {
         this.#addDeckButton = document.createElement("button");
         this.#addDeckButton.textContent = "Add Deck";
         this.#addDeckButton.addEventListener("click", () => {this.#addDeckDialog.showModal();})
+
+        //TODO notebook-view does html elements differently than other views, bring it in line with them
+        this.#deleteDeckButton = document.createElement("button");
+        this.#deleteDeckButton.textContent = "Delete Deck";
+        this.#deleteDeckButton.addEventListener("click", () => {});
+        this.#deleteDeckButton.disabled;            //for now the functionality isn't there so disable for now
 
         //Dialog
         //Todo, need to add a <div> or article element to group things better instead of uppending one at a time.
@@ -60,7 +67,7 @@ export default class NoteView {
             this.#addDeckDialog.close()});
 
         //TODO append or appendChild??
-        this.#root.append(this.#title, this.#addDeckButton, this.#addDeckDialog, this.#decksEl) ;
+        this.#root.append(this.#title, this.#addDeckButton, this.#addDeckDialog,this.#deleteDeckButton, this.#decksEl) ;
         document.querySelector("#app")!.appendChild(this.#root);
 
         this.notify();
@@ -147,7 +154,6 @@ export default class NoteView {
     //   <h3 class="deck-title">Spanish Vocab</h3>
     //   <p class="deck-count">24 cards</p>
     //   <button class="study-btn">Study</button>
-    // TODO but how to differentiate the <button> elements on eahc of the decks the user will see???
     // </div>
 
 

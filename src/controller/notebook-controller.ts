@@ -38,7 +38,6 @@ export default class NotebookController {
         this.#notebookView.hide();
         this.#deckController = new DeckController(deck, this);      //want the controller to know about its parent so passing it on
 
-
     }
 
     //The user leaves the deck returning to the notebook view
