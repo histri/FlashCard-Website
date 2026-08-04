@@ -14,15 +14,15 @@ export default class Deck {
     #listeners: Array<Listener>;
 
     //Constructor overload todo is it better to just have one big constructor with ? on some of the parameters
-    private constructor(name:string, ownerID: number)
     private constructor(name:string, ownerID: number, id?: number, cards?: Array<FlashCard>) {
         this.#name = name;
         this.#ownerID = ownerID;
         if(id === undefined){
-            this.#id= id;
-            this.#cards = cards!;           //todo, not sure if the deck exists but is empty
-        }else{
             this.#cards = new Array<FlashCard>();
+            //todo, not sure if the deck exists but is empty
+        }else{
+            this.#id= id;
+            this.#cards = cards!;
         }
         //Initialise the name of the deck
         //check preconditions
@@ -232,7 +232,7 @@ export default class Deck {
 
     }
 
-    static async loadDecksForId(ownerId: number): Promise<Array<Deck>> {
+    static async loadDecksForNoteBook(ownerId: number): Promise<Array<Deck>> {
 
         let decks: Array<Deck> = [];            //initialise an empty deck
 

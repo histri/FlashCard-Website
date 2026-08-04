@@ -14,8 +14,6 @@ export  default class NoteBook {
    // #numOfDecks: number;      //just size of the deck array
     #listeners: Array<Listener>;    //listeners listen to the updates on this domain class
 
-    private constructor();
-    private constructor(idExists: number, nameExists: string, deckExists: Array<Deck>, listenerExists: Array<Listener> );
     private constructor(idExists?: number, nameExists?: string, deckExists?: Array<Deck>, listenerExists?: Array<Listener> ) {
         //if the user wasnt defined
         if(idExists === undefined) {
@@ -45,11 +43,10 @@ export  default class NoteBook {
         let exists:boolean = await this.#noteExists("Andrii Notebook");
 
         if(exists){
+            console.log("NoteBook already exists!");
             //fetch info from DB and construct based on that
             noteBook = await NoteBook.load("Andrii Notebook");
-            //TODO dont forget I'll also need to take info from the other tables like deck and flashcard
-            console.log("This note exists already")
-            throw new Error(`${exists} already`);
+
         }else{
             //construct a new class instance
             noteBook = new NoteBook();
@@ -210,7 +207,7 @@ export  default class NoteBook {
         const id: number = data[0].user_id;
 
         // Cascade: load this notebook's decks (which should themselves cascade to load their cards)
-        const decks: Array<Deck> = await Deck.loadDecksForNotebook(id);
+        const decks: Array<Deck> = await Deck.loadDecksForNoteBook(id);
 
         // Listeners are runtime-only, never persisted — always start empty on load
         const listeners: Array<Listener> = new Array<Listener>();

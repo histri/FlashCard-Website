@@ -13,17 +13,17 @@ export default class FlashCard {
 
 
     #id?: number;                //for future when woking with DB persistence
-    ownerId: number;
+    #ownerId: number;
     #titleSide: string;             //front side of the card
     #infoSide: string;      //back side of the card that gets revealed later
 
 
     private constructor(titleSide:string, infoSide:string, ownerId:number, id?: number) {
-
         this.#titleSide = titleSide;
         this.#infoSide = infoSide;
-        this.ownerId = ownerId;
-        if(id === undefined) {
+        this.#ownerId = ownerId;
+        //in the case the object gets constructed from the DB
+        if(id !== undefined) {
             this.#id = id;
         }
 
