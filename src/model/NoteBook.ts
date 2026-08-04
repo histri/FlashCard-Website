@@ -6,6 +6,8 @@ import {supabase} from "../supabaseClient.ts";
 
 //TODO the builds should really have a try catch, to avoid null ids
 
+
+
 export  default class NoteBook {
     #id?: number;               //id of the instance (assigned by database)
     #name : string;
