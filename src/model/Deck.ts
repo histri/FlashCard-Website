@@ -12,15 +12,23 @@ export default class Deck {
     #name: string;          //name of the deck (ex: Bio)
     #cards: Array<FlashCard>;    //the cards in the deck
     #listeners: Array<Listener>;
-    private constructor(name:string, ownerID: number) {
-        //Initialise the name of the deck
+
+    //Constructor overload todo is it better to just have one big constructor with ? on some of the parameters
+    private constructor(name:string, ownerID: number)
+    private constructor(name:string, ownerID: number, id?: number, cards?: Array<FlashCard>) {
         this.#name = name;
         this.#ownerID = ownerID;
+        if(id === undefined){
+            this.#id= id;
+            this.#cards = cards!;           //todo, not sure if the deck exists but is empty
+        }else{
+            this.#cards = new Array<FlashCard>();
+        }
+        //Initialise the name of the deck
         //check preconditions
         if (this.#name.length === 0) {
             throw new InvalidNameException;
         }
-        this.#cards = new Array<FlashCard>();
         this.#listeners = new Array<Listener>();
         //Check invariants
         this.#checkDeck();
@@ -224,18 +232,27 @@ export default class Deck {
 
     }
 
-    static async loadDecksForId(ownerId: number): Promise<Deck> {
+    static async loadDecksForId(ownerId: number): Promise<Array<Deck>> {
 
-        let deck: Deck;
+        let decks: Array<Deck> = [];            //initialise an empty deck
 
         //select * where owner_user_id = ownerID
         const {data, error} = await supabase
             .from('decks')
-            .select('')
+            .select('*')
             .eq('owner_user_id', ownerId)
 
-        //Construct decks that have the same owner id
 
+        //Construct decks that have the same owner id
+        // @ts-ignore - for now I know the data will work
+        for (const row of data) {
+            const cards = await FlashCard.loadCardsForDeck(row.id);         //get an array of cards for the deck
+            const deck = new Deck(row.deck_name, row.owner_user_id, row.id, cards);
+            decks.push(deck);
+
+        }
+
+        return decks;
     }
 
 }

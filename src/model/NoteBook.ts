@@ -17,6 +17,7 @@ export  default class NoteBook {
     private constructor();
     private constructor(idExists: number, nameExists: string, deckExists: Array<Deck>, listenerExists: Array<Listener> );
     private constructor(idExists?: number, nameExists?: string, deckExists?: Array<Deck>, listenerExists?: Array<Listener> ) {
+        //if the user wasnt defined
         if(idExists === undefined) {
             this.#name = "Andrii Notebook";
             this.#decks = new Array<Deck>();
@@ -24,6 +25,7 @@ export  default class NoteBook {
             //check assertions
             this.#checkNoteBook();
         }else{
+            //a user with given info already exists
             //Adding '!' since we know this will be assinged to object
             this.#id = idExists!;
             this.#name = nameExists!;
@@ -186,7 +188,7 @@ export  default class NoteBook {
     }*/
     //TODO I should really rename notebook to user makes it very confusing currently
 
-    static async loadNotebook(name: string) : Promise<NoteBook> {
+    static async load(name: string) : Promise<NoteBook> {
         //We know the notebook exists now we just need to create the new
         let noteBook: NoteBook;
 
@@ -216,7 +218,6 @@ export  default class NoteBook {
         noteBook = new NoteBook(id, name, decks, listeners);
 
         return noteBook;
-
 
 
     }

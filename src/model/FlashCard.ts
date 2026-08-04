@@ -18,11 +18,15 @@ export default class FlashCard {
     #infoSide: string;      //back side of the card that gets revealed later
 
 
-    private constructor(titleSide:string, infoSide:string, ownerId:number) {
-        //ID will be initialised from database (not set up yet)
+    private constructor(titleSide:string, infoSide:string, ownerId:number, id?: number) {
+
         this.#titleSide = titleSide;
         this.#infoSide = infoSide;
         this.ownerId = ownerId;
+        if(id === undefined) {
+            this.#id = id;
+        }
+
         //check preconditions
         if(this.#titleSide.length ===0){
             throw new InvalidNameException();
@@ -115,6 +119,25 @@ export default class FlashCard {
         //TODO what if notebook/deck/card got edited?
 
     }
+
+    static async loadCardsForDeck(ownerId:number): Promise<Array<FlashCard>>{
+        let cards: Array<FlashCard> = [];
+
+        const {data, error} = await supabase
+            .from('flashcards')
+            .select('*')
+            .eq('deck_id', ownerId);
+
+        //Construct the cards and return them
+        // @ts-ignore
+        for(const row of data){
+            const single = new FlashCard(row.title, row.info, ownerId, row.id);
+            cards.push(single);
+        }
+
+        return cards;
+    }
+
 
 
 }
