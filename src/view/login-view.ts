@@ -67,19 +67,29 @@ export default class LoginView{
     }
 
 
-    #addUser() : void {
-        let name = this.#createAccountDialog.querySelector<HTMLInputElement>("input[type='text']")!.value;
-       // let password = this.#createAccountDialog.querySelector<HTMLInputElement>("#Password")!.value;
-        try{
+    async #addUser() : Promise<void> {
+        let name = this.#createAccountDialog.querySelector<HTMLInputElement>("#nickname")!.value.trim();
 
-        }catch(e){
+        try{
+            await this.#controller.createUser(name);
+            //success - the controller swaps this whole view out, but tidy up just in case
+            this.#createAccountDialog.close();
+        }catch(e: any){
 
         }
-
     }
 
-    #logInUser() : void {
+    async #logInUser() : Promise<void> {
+        let name = this.#logInDialog.querySelector<HTMLInputElement>("#nickname")!.value.trim();
+        try{
+            await this.#controller.logInUser(name);
+            this.#logInDialog.close();
+        }catch(e: any){
 
+        }
+    }
 
+    hide(): void {
+        this.#root.style.display = "none";
     }
 }

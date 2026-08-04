@@ -5,4 +5,4 @@ import "./style.css";
 //initialise the controller
 
 
-const noteController: NotebookController = await NotebookController.build();
+const noteController: NotebookController = new NotebookController();

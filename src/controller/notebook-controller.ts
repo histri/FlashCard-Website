@@ -4,38 +4,54 @@ import NoteBook from "../model/NoteBook.ts";
 import NoteView from "../view/notebook-view.ts";
 import Deck from "../model/Deck.ts";
 import DeckController from "./deck-controller.ts";
+import  LoginView from "../view/login-view.ts";
 
 export default class NotebookController {
 
-    #notebook: NoteBook;
+    #notebook?: NoteBook;
     #deckController: DeckController|null;
-    #notebookView: NoteView;
+    #userView: LoginView;
+    #notebookView?: NoteView;
 
-    private constructor(notebook: NoteBook) {
-        this.#notebook = notebook;
-        this.#notebookView = new NoteView(this.#notebook, this);
+    //changed my mind again about private constructor for this builder
+    constructor() {
         this.#deckController = null;
+        this.#userView = new LoginView(this);
     }
 
-    static async build(): Promise<NotebookController> {
-        //the controller doesnt know anything about how the Notebook gets built
-        const notebook = await NoteBook.build();
-        return new NotebookController(notebook);
+    //Called from the "Create Account" dialog - fails if that username is already taken
+    async createUser(username: string): Promise<void> {
+        const n: NoteBook = await NoteBook.create(username);
+        this.#finishLogin(n);
     }
+
+    //Called from the "Log In" dialog - fails if no account exists with that username
+    async logInUser(username: string): Promise<void> {
+        const n: NoteBook = await NoteBook.login(username);
+        this.#finishLogin(n);
+    }
+
+    //Shared by both flows above: store the notebook, tear down the login screen,
+    //  and hand off to the notebook view
+    #finishLogin(n: NoteBook): void {
+        this.#notebook = n;
+        this.#userView.hide();
+        this.#notebookView = new NoteView(n, this);
+    }
+
 
     //Adds a new deck to the current notebook
     //Decks hold flashcards, currently decks property is only its name
     async addDeck(deckName: string): Promise<void> {
-        let deck = await Deck.build(deckName,this.#notebook.id!);
-        this.#notebook.addDeck(deck);
-        this.#notebookView.listenToDeck(deck);
+        let deck = await Deck.build(deckName,this.#notebook!.id!);
+        this.#notebook!.addDeck(deck);
+        this.#notebookView!.listenToDeck(deck);
     }
 
     //The user can enter a deckmenu - this creates a new deck controller and deck menu view
     //      the notebook menu isn't deleted just made "invisible"
     openDeck(deck:Deck): void {
-
-        this.#notebookView.hide();
+        this.#notebookView!.hide();
         this.#deckController = new DeckController(deck, this);      //want the controller to know about its parent so passing it on
 
     }
@@ -47,7 +63,7 @@ export default class NotebookController {
         //Destroy deck controller
         //TODO I am not a big fan of the fact the destroy command need to propagate all the way through the controller and each view
         //      maybe there is a better way to do it
-        this.#notebookView.show();
+        this.#notebookView!.show();
     }
 
     // deleteDeck(deck:Deck): void {

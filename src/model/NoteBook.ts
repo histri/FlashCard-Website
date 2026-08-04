@@ -16,10 +16,11 @@ export  default class NoteBook {
    // #numOfDecks: number;      //just size of the deck array
     #listeners: Array<Listener>;    //listeners listen to the updates on this domain class
 
-    private constructor(idExists?: number, nameExists?: string, deckExists?: Array<Deck>, listenerExists?: Array<Listener> ) {
-        //if the user wasnt defined
+    private constructor(name: string, idExists?: number, deckExists?: Array<Deck>, listenerExists?: Array<Listener> ) {
+        //deck will always have a name given as a parameter
+        this.#name = name;
+        //if the user wasn't defined
         if(idExists === undefined) {
-            this.#name = "Andrii Notebook";
             this.#decks = new Array<Deck>();
             this.#listeners = new Array<Listener>();
             //check assertions
@@ -28,7 +29,6 @@ export  default class NoteBook {
             //a user with given info already exists
             //Adding '!' since we know this will be assinged to object
             this.#id = idExists!;
-            this.#name = nameExists!;
             this.#decks = deckExists!;
             this.#listeners = listenerExists!;
             this.#checkNoteBook();
@@ -36,28 +36,28 @@ export  default class NoteBook {
 
     }
 
-    //For making a brand new deck
-    //Letting the Model handle ALL the persistence logic
-    public static async build (): Promise<NoteBook>{
-        let noteBook: NoteBook;         //todo fix var declaration
-        //Check if the notebook exists - currently no user input for user this is just to get the SELECT code working
-        //TODO get a name input later
-        let exists:boolean = await this.#noteExists("Andrii Notebook");
-
-        if(exists){
-            console.log("NoteBook already exists!");
-            //fetch info from DB and construct based on that
-            noteBook = await NoteBook.load("Andrii Notebook");
-
-        }else{
-            //construct a new class instance
-            noteBook = new NoteBook();
-            //save the build immediately
-            await NoteBook.saveNote(noteBook);
-
+    //Create a brand new notebook. Fails if the username is already taken -
+    //  this is the "Create Account" flow.
+    public static async create(username: string): Promise<NoteBook> {
+        const exists: boolean = await this.#noteExists(username);
+        if (exists) {
+         //   throw new AccountAlreadyExistsException();
         }
-        return noteBook;
 
+        const noteBook = new NoteBook(username);
+        await NoteBook.saveNote(noteBook);
+        return noteBook;
+    }
+
+    //Load an existing notebook. Fails if no account exists with this username -
+    //  this is the "Log In" flow.
+    public static async login(username: string): Promise<NoteBook> {
+        const exists: boolean = await this.#noteExists(username);
+        if (!exists) {
+          //  throw new UserNotFoundException();
+        }
+
+        return await NoteBook.load(username);
     }
 
 
@@ -205,7 +205,7 @@ export  default class NoteBook {
         }
 
 
-        // @ts-ignore                   - I know this value will be defined or caught
+        // @ts-ignore                   - for now
         const id: number = data[0].user_id;
 
         // Cascade: load this notebook's decks (which should themselves cascade to load their cards)
@@ -214,10 +214,9 @@ export  default class NoteBook {
         // Listeners are runtime-only, never persisted — always start empty on load
         const listeners: Array<Listener> = new Array<Listener>();
 
-        noteBook = new NoteBook(id, name, decks, listeners);
+        noteBook = new NoteBook(name, id,  decks, listeners);
 
         return noteBook;
-
 
     }
 
