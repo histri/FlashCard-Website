@@ -6,34 +6,44 @@ import {supabase} from "../supabaseClient.ts";
 
 //Instances of this class serve as decks of cards that user can go through.
 //TODO future feature to copy cards, transfer from one deck to another
+
 export default class Deck {
-    #id? : number;          //assigned by the database
-    #ownerID: number;           //TODO not sure if this is best practice
-    #name: string;          //name of the deck (ex: Bio)
+    #id? : number;                //id of the class instance given by database
+    #ownerID: number;             //id of the data owner of this instance
+    #name: string;                //name of the deck (ex: Bio)
     #cards: Array<FlashCard>;    //the cards in the deck
-    #listeners: Array<Listener>;
+    #listeners: Array<Listener>;    //object that listen to changes in the deck
 
     //Constructor with optional parameters
     private constructor(name:string, ownerID: number, id?: number, cards?: Array<FlashCard>) {
         this.#name = name;
         this.#ownerID = ownerID;
+
+        //if object was just created (no database id is assosiated with it)
         if(id === undefined){
             this.#cards = new Array<FlashCard>();
             //todo, not sure if the deck exists but is empty
         }else{
+            //else this object already exists in the database we fetch the data from there to create the class instace
             this.#id= id;
             this.#cards = cards!;
         }
-        //Initialise the name of the deck
+
+
         //check preconditions
         if (this.#name.length === 0) {
             throw new InvalidNameException;
         }
+
+        //Listeners are always assigned at run time
         this.#listeners = new Array<Listener>();
         //Check invariants
         this.#checkDeck();
     }
 
+    //build() - Async method - creates instance of the class and saves it to the database
+    //      name - name of the deck
+    //      ownerID - DB id of the data owner
     static async build(name:string, ownerId: number): Promise<Deck>{
         const deck = new Deck(name, ownerId);
 
@@ -43,24 +53,22 @@ export default class Deck {
 
     }
 
+    //checkDeck() - checks the class invariants
     #checkDeck(): void {
     //Invariants
         assert(this.#name.length > 0, "Names must not be empty")
     }
 
     //register all the things that will be listening to the notebook
-            //currently just the deck-menu-view, but could also be the notebook view
-            //considering that it will display how many flashcards each deck has for example
-
+    //      listener - some class instance that listens to this class instance
     registerListener(listener: Listener): void {
         this.#listeners.push(listener);
         //check invariants
         this.#checkDeck();
     }
 
-    //TODO this whole approach might be inefficient since Deck will probably only ever have one listener
-    //A specific listener instance is removed from the model's list of listeners so it is no longer notifying it
-    //Going out of deckmenu means we delete it - but deck menu registers itself as a listener to the model
+    //unregisterListener() - A specific listener instance is removed from the model's list of listeners
+    //          thus current class instance is no longer notifying a given listener
     unregisterListener(listener: Listener): void {
         //https://stackoverflow.com/questions/15292278/how-do-i-remove-an-array-item-in-typescript
         this.#listeners = this.#listeners.filter((l) => l !== listener);
@@ -71,9 +79,9 @@ export default class Deck {
     //Notify all the listeners that a change happened to the domain model (new number of cards)
     #notifyAll() {
         this.#listeners.forEach((l) => l.notify());
-        //TODO it would be a good idea to save the info to database on each notify
     }
 
+    /*Getters*/
 
     get name(): string {
         return this.#name;
@@ -89,11 +97,11 @@ export default class Deck {
         return this.#id;
     }
 
-    //Current methods that I want to implement
+    /*Deck Manipulation */
 
     //Add a card to the deck (cards must have unique names)
-    //not sure about paramters yet, maybe name or number(id) of the deck
-    //return boolean - whether operation was successful
+    //  card - given acrd that is added to the array
+    //  return boolean - whether operation was successful
     addCard(card : FlashCard): void{
         //Check if the card duplicate already exists only push if it doesnt exist
         if(this.#isCardDuplicate(card)){
@@ -106,7 +114,9 @@ export default class Deck {
             this.#notifyAll();
         }
     }
-    //get a flashcard instance by the title
+
+    //getCard() - get a flashcard instance by the title
+    //     title - the title of the card we are looking for
     getCard(title: string): FlashCard {
         let card: FlashCard| undefined = undefined;
         for(let i = 0; i < this.#cards.length; i++){
@@ -120,7 +130,10 @@ export default class Deck {
         return card;
     }
 
-
+    //editCard() - take an existing card and change its title/info
+    //  oldTitle - previous title the that card held
+    //  newTitle - new title that will be given to the card
+    //  newInfo - new info that will be given to the card
     editCard(oldTitle: string, newTitle: string, newInfo: string): void {
         //find the card we want to edit (throws CardNotFoundException if missing)
         let card = this.getCard(oldTitle);
@@ -148,7 +161,7 @@ export default class Deck {
         this.#checkDeck();
     }
 
-    //Private function to check whether a created card has a duplicate name to one that is already in the list
+    //isCardDuplicate() Private helper to check whether a created card has a duplicate name to one that is already in the list
     #isCardDuplicate(card: FlashCard): boolean {
         let found: boolean = false;
         for(let i = 0; i < this.#cards.length; i++){
@@ -159,7 +172,7 @@ export default class Deck {
         return found;
     }
 
-    //Find a card in the deck based on title and deletes it
+    //removeCard() - Find a card in the deck based on title and deletes it
     //TODO optimise this method
     removeCard(title: string): void  {
         if(title.length === 0){
@@ -194,6 +207,9 @@ export default class Deck {
     * DB stuff
     *  */
 
+    //saveDeck() - saves a given Deck instance to the DB while cascading and saving its children
+    //  deck - deck instance we are saving
+    //  ownerId - id of the parent instance for the given deck
     static async saveDeck(deck: Deck, ownerId: number): Promise<void> {
         //save the deck to the Supabase tables
 
@@ -232,6 +248,8 @@ export default class Deck {
 
     }
 
+    //loadDecksForNotebook() - static method that loads all the decks thte user has based on their id
+    //      owenerId - DB id of the user we are finding the decks of
     static async loadDecksForNoteBook(ownerId: number): Promise<Array<Deck>> {
 
         let decks: Array<Deck> = [];            //initialise an empty deck
