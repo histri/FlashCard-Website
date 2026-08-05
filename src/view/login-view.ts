@@ -1,6 +1,7 @@
 //Currently implementing a very basic log in to the application (no auth or security)
 
 import NotebookController from "../controller/notebook-controller.ts";
+import {UserExistsException} from "../model/exceptions.ts";
 
 export default class LoginView{
     #controller: NotebookController;
@@ -29,18 +30,19 @@ export default class LoginView{
               <h2>Create Account</h2>
               <span id="error"></span><br />
               <label for="nickname">Name</label>
-              <input type="text" id="nickname" />
+              <input type="text" id="nickname"/>
              <!-- <label for="Password">Password</label> -->
              <!-- <input type="text" id="Password" /> -->
               <button>Add Account</button>
         `;
         this.#logInDialog.innerHTML = `
+            <h2>Log into an Account</h2>
            <span id="error"></span><br />
           <label for="nickname">Name</label>
           <input type="text" id="nickname" />
          <!--  <label for="Password">Password</label> -->
           <!-- <input type="text" id="Password" /> -->
-          <button>Enter </button>
+          <button>Enter</button>
         `
 
         // only open the relevant dialog when chosen
@@ -72,9 +74,18 @@ export default class LoginView{
 
         try{
             await this.#controller.createUser(name);
-            //success - the controller swaps this whole view out, but tidy up just in case
+            //close the dialog before controller closes the screen and opens a notebook
             this.#createAccountDialog.close();
         }catch(e: any){
+            if(e instanceof UserExistsException){
+                this.#createAccountDialog.querySelector<HTMLInputElement>("#nickname")!
+                    .setAttribute("style", "border-color:red;");
+                this.#createAccountDialog.querySelector("#error")!
+                    .textContent = "Invalid name, an account with \"" + name + "\" already exists";
+            }else{
+                console.log("Some unknown error on create account");
+            }
+
 
         }
     }
@@ -82,15 +93,25 @@ export default class LoginView{
     async #logInUser() : Promise<void> {
         let name = this.#logInDialog.querySelector<HTMLInputElement>("#nickname")!.value.trim();
         try{
+            //TODO issues with it, is it because async?
+            console.log("Started tryiing to log in");
             await this.#controller.logInUser(name);
+            console.log("should be logged in now");
             this.#logInDialog.close();
         }catch(e: any){
-
+            if(e instanceof UserExistsException){
+                this.#logInDialog.querySelector<HTMLInputElement>("#nickname")!
+                    .setAttribute("style", "border-color:red;");
+                this.#logInDialog.querySelector("#error")!
+                    .textContent = "Invalid name, an account with \"" + name + "\" doesn't exist";
+            }else{
+                console.log("Some unknown error on log in");
+            }
         }
     }
 
 
-    //TODO so is this view still ther as the user uses the app?
+    //TODO so is this view still there as the user uses the app?
     hide(): void {
         this.#root.style.display = "none";
     }

@@ -1,6 +1,7 @@
 import Deck from "./Deck.ts";
 import type Listener from "./Listener.ts";
 import {supabase} from "../supabaseClient.ts";
+import {UserExistsException} from "./exceptions.ts";
 //Main Domain class in the current hierarchy NoteBook > Deck > Cards
 
 
@@ -36,12 +37,14 @@ export  default class NoteBook {
 
     }
 
-    //Create a brand new notebook. Fails if the username is already taken -
-    //  this is the "Create Account" flow.
+    //create() - given a username, create a new instance of Notebook class (user)
+    //      username - name that the user is created with - must be unique
     public static async create(username: string): Promise<NoteBook> {
+        //check whether a given user exists
         const exists: boolean = await this.#noteExists(username);
+        //if user exists throw an exception to stop the function
         if (exists) {
-         //   throw new AccountAlreadyExistsException();
+            throw new UserExistsException(username);
         }
 
         const noteBook = new NoteBook(username);
@@ -52,12 +55,16 @@ export  default class NoteBook {
     //Load an existing notebook. Fails if no account exists with this username -
     //  this is the "Log In" flow.
     public static async login(username: string): Promise<NoteBook> {
+        let n: NoteBook;
+        //check whether a user with the given name exists
         const exists: boolean = await this.#noteExists(username);
         if (!exists) {
-          //  throw new UserNotFoundException();
+          throw new UserExistsException(username);
         }
 
-        return await NoteBook.load(username);
+        //fetch data from the database and create an instance based on that
+        n = await NoteBook.load(username);
+        return n;
     }
 
 
@@ -151,6 +158,7 @@ export  default class NoteBook {
         });
     }
 
+    //noteExists() - Check whether a user with a given name already exists
     static async #noteExists(name:string): Promise<boolean>{
         let found : boolean = false;
 
