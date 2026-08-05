@@ -48,7 +48,7 @@ export default class createCardView {
 
     //Adding a card to a deck
     //Currently card has - title and info side
-    #addCard(): void {
+    async #addCard(): Promise<void> {
         //take the user input
         let title:string = this.#dialog.querySelector<HTMLInputElement>("input#card-title")!.value;
         let infoSide:string = this.#dialog.querySelector<HTMLInputElement>("textarea#card-info")!.value;
@@ -57,7 +57,7 @@ export default class createCardView {
         infoSide = infoSide.trim();
         try{
             //ask the controller to add a new card with given parameters
-            this.#controller.addToDeck(title, infoSide);
+            await this.#controller.addToDeck(title, infoSide);
             this.#dialog.close();
             //reset the text dialog values since close doesnt natively do that
             this.#dialog.querySelector<HTMLInputElement>("#card-title")!.value = "";

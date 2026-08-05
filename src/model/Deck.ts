@@ -102,18 +102,16 @@ export default class Deck {
     //Add a card to the deck (cards must have unique names)
     //  card - given acrd that is added to the array
     //  return boolean - whether operation was successful
-    addCard(card : FlashCard): void{
+    async addCard(title: string, info: string): Promise<void>{
         //Check if the card duplicate already exists only push if it doesnt exist
-        if(this.#isCardDuplicate(card)){
+        if(this.#isCardDuplicate(title)){
             throw new DuplicateException();
-        }else{
-            this.#cards.push(card);
-            //TODO persist data
-            //Notify all listeners
-            //TODO want to seperate the deck listener and the notebook listener
-            this.#notifyAll();
         }
+        const card = await FlashCard.build(title, info, this.#id!);
+        this.#cards.push(card);
+        this.#notifyAll();
     }
+
 
     //getCard() - get a flashcard instance by the title
     //     title - the title of the card we are looking for
@@ -162,10 +160,10 @@ export default class Deck {
     }
 
     //isCardDuplicate() Private helper to check whether a created card has a duplicate name to one that is already in the list
-    #isCardDuplicate(card: FlashCard): boolean {
+    #isCardDuplicate(newTitle:string): boolean {
         let found: boolean = false;
         for(let i = 0; i < this.#cards.length; i++){
-            if(this.cards.at(i)?.titleSide === card.titleSide){
+            if(this.cards.at(i)?.titleSide === newTitle){
                 found = true;
             }
         }

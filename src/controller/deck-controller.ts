@@ -45,10 +45,10 @@ export default class DeckController {
 
     //Add a newly created card to the deck
     async addToDeck(title:string, info: string): Promise<void> {
-        let card = await FlashCard.build(title, info, this.#givenDeck.id!);
-        this.#givenDeck.addCard(card);
+        await this.#givenDeck.addCard(title, info);           //model owns construction delegation and persistence
        this.closeCreateCardView();
     }
+
 
 
     showDeleteCardView() {

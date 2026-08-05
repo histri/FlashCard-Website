@@ -3,7 +3,7 @@
 //This is the simplest current implementation I could think of
 
 import DeckController from "../controller/deck-controller.ts";
-import {CardNotFoundException} from "../model/exceptions.ts";
+import {CardNotFoundException, InvalidNameException} from "../model/exceptions.ts";
 
 export default class deleteCardView {
 
@@ -59,8 +59,13 @@ export default class deleteCardView {
                 this.#dialog.querySelector<HTMLInputElement>("#card-title")!
                     .setAttribute('style', 'border-color:red;');
                 this.#dialog.querySelector("#error")!
+                    .textContent = "Could not find a card with that title to delete";
+            }else if(e instanceof InvalidNameException){
+                this.#dialog.querySelector<HTMLInputElement>("#card-title")!
+                    .setAttribute('style', 'border-color:red;');
+                this.#dialog.querySelector("#error")!
                     .textContent = "Invalid title, titles must have at least one letter (e.g., mitochondria).";
-            }else{
+            } else{
                 console.log("Unknown error while deleting card");
             }
         }
