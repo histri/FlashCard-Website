@@ -89,6 +89,8 @@ export default class LoginView{
         }
     }
 
+
+    //TODO so is this view still ther as the user uses the app?
     hide(): void {
         this.#root.style.display = "none";
     }
