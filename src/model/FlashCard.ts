@@ -1,4 +1,4 @@
-import {InvalidInfoException, InvalidNameException} from "./exceptions.ts";
+import {FailedDBException, InvalidInfoException, InvalidNameException} from "./exceptions.ts";
 import {assert} from "../assertions.ts";
 import {supabase} from "../supabaseClient.ts";
 
@@ -85,7 +85,6 @@ export default class FlashCard {
 * DB stuff
 *  */
 
-    //TODO
     static async saveCard(card : FlashCard, ownerDeckId: number): Promise<void> {
         //save the deck to the Supabase tables
         //for now only saving if id is undefined obviously will change since you can edit and delete cards
@@ -100,10 +99,6 @@ export default class FlashCard {
                     }
                 ])
                 .select();
-
-            //TODO need to get id of the parent object to make the foreign key constraint work
-
-
             // Access properties directly off the response object
             if (response.error|| response.data == undefined) {
                 console.error('Error saving Deck:', response.error);
@@ -119,6 +114,7 @@ export default class FlashCard {
         //TODO what if notebook/deck/card got edited?
 
     }
+
 
     static async loadCardsForDeck(ownerId:number): Promise<Array<FlashCard>>{
         let cards: Array<FlashCard> = [];
@@ -138,6 +134,23 @@ export default class FlashCard {
         return cards;
     }
 
+    //Given a card delete if from the DB
+    static async deleteCard(card :FlashCard): Promise<void> {
+        //Just in case card was never given an ID(saved to the DB) do an early return
+        if(card.id === undefined){
+            return;
+        }
+
+        const {data, error} = await supabase
+        .from('flashcards')
+            .delete()
+            .eq('id', card.id);
+
+        if (error) {
+            console.error('Error deleting FlashCard:', error);
+            throw new FailedDBException();
+        }
+    }
 
 
 }

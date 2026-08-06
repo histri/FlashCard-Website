@@ -62,8 +62,8 @@ export default class DeckController {
         this.#deleteCardView = undefined;
     }
     //For this to work must assume all cards have unique names
-    deleteCard(title:string): void {
-        this.#givenDeck.removeCard(title);
+    async deleteCard(title:string): Promise<void> {
+        await this.#givenDeck.removeCard(title);
         this.closeDeleteCardView();
     }
 

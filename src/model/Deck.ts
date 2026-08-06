@@ -172,34 +172,37 @@ export default class Deck {
 
     //removeCard() - Find a card in the deck based on title and deletes it
     //TODO optimise this method
-    removeCard(title: string): void  {
+    async removeCard(title: string): Promise<void> {
         if(title.length === 0){
             throw new InvalidNameException();
         }
 
         //using while loop to not go through the whole array for no reason
         let i = 0;              //index of the card we will delete in the deck
-
         while(i < this.#cards.length && this.cards.at(i)?.titleSide !== title){
             i++;
         }
-
+        //if i exceeded the indexes of cards 0 based it means the card was not found
         if(i === this.cards.length){
             throw new CardNotFoundException;
         }
 
+        let toDelete: FlashCard = this.#cards[i];
         //remove the single card at index i
         //https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array-in-javascript
         //remove the single card at index i
         this.#cards.splice(i, 1);
 
-        //TODO persist data
+        //DB
+        await FlashCard.deleteCard(toDelete);
         //Notify all listeners that the deck changed
         this.#notifyAll();
 
         //check invariants
         this.#checkDeck();
     }
+
+
 
     /*
     * DB stuff

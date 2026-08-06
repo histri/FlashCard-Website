@@ -3,7 +3,7 @@
 //This is the simplest current implementation I could think of
 
 import DeckController from "../controller/deck-controller.ts";
-import {CardNotFoundException, InvalidNameException} from "../model/exceptions.ts";
+import {CardNotFoundException, FailedDBException, InvalidNameException} from "../model/exceptions.ts";
 
 export default class deleteCardView {
 
@@ -41,14 +41,14 @@ export default class deleteCardView {
 
     //Local method that sends text input to delete a card
 
-    #deleteCard() {
+    async #deleteCard() {
         let cardTitle:string = this.#dialog.querySelector<HTMLInputElement>("input#card-title")!.value;
         //Trim the spaces around the input - not an issue since creating a card also trims spaces
         cardTitle = cardTitle.trim();
 
         //Ask the controller to find and delete the given card
         try{
-            this.#controller.deleteCard(cardTitle);
+            await this.#controller.deleteCard(cardTitle);
             //TODO not sure the order is correct of the 2 lines
             this.#dialog.close();
             //reset the text dialog values since close doesnt natively do that
@@ -65,7 +65,12 @@ export default class deleteCardView {
                     .setAttribute('style', 'border-color:red;');
                 this.#dialog.querySelector("#error")!
                     .textContent = "Invalid title, titles must have at least one letter (e.g., mitochondria).";
-            } else{
+            } else if (e instanceof FailedDBException) {
+                this.#dialog.querySelector<HTMLInputElement>("#card-title")!
+                    .setAttribute('style', 'border-color:red;');
+                this.#dialog.querySelector("#error")!
+                    .textContent = "Unable to delete card error with DB";
+            }else{
                 console.log("Unknown error while deleting card");
             }
         }
