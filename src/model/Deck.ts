@@ -132,9 +132,9 @@ export default class Deck {
     //  oldTitle - previous title the that card held
     //  newTitle - new title that will be given to the card
     //  newInfo - new info that will be given to the card
-    editCard(oldTitle: string, newTitle: string, newInfo: string): void {
+    async editCard(oldTitle: string, newTitle: string, newInfo: string): Promise<void> {
         //find the card we want to edit (throws CardNotFoundException if missing)
-        let card = this.getCard(oldTitle);
+        let card :FlashCard = this.getCard(oldTitle);
 
         //check if any OTHER card already has the new title
         let isDuplicate: boolean = false;
@@ -152,7 +152,9 @@ export default class Deck {
         //update the card - throws InvalidNameException / InvalidInfoException if invalid
         card.editItself(newTitle, newInfo);
 
-        //TODO persist data
+        //DB will take the card (with now new info and update the DB with that also)
+        await FlashCard.editCard(card);
+
         this.#notifyAll();
 
         //check invariants

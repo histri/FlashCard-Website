@@ -81,11 +81,9 @@ export default class EditCardView  {
             //get the card  to edit - or exception if it doesnt exist
             this.#card = this.#controller.findCardByTitle(title);
             this.#cardTitle = this.#card.titleSide; // keep the original title as our lookup key
-
             // pre-fill the edit dialog with existing values
             this.#editCardDialog.querySelector<HTMLInputElement>("#edit-title")!.value = this.#card.titleSide;
             this.#editCardDialog.querySelector<HTMLInputElement>("#edit-info")!.value = this.#card.infoSide;
-
             //Now show the dialog to actually edit the card
             this.#selectCardDialog.close();
             this.#editCardDialog.showModal();
@@ -103,7 +101,7 @@ export default class EditCardView  {
     }
 
     //
-    #editCard(){
+    async#editCard(){
         //the user could have technically leave the input the same as it was
         let newTitle = this.#editCardDialog
             .querySelector<HTMLInputElement>("#edit-title")!.value.trim();

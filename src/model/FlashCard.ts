@@ -152,5 +152,32 @@ export default class FlashCard {
         }
     }
 
+    static async editCard(card :FlashCard): Promise<void> {
+        //Just in case card was never given an ID(saved to the DB) do an early return
+        if(card.id === undefined){
+            return;
+        }
+        /*      Something like this
+            UPDATE flashcards
+            SET title = 'card.title', info= 'card.info'
+            WHERE cardID = card.id;
+         */
+
+        const {data, error} = await supabase
+            .from('flashcards')
+            .update({
+                title: card.titleSide,
+                info: card.infoSide
+            })
+            .eq('id', card.id);
+
+        //or .match??
+
+        if (error) {
+            console.error('Error editing FlashCard:', error);
+            throw new FailedDBException();
+        }
+
+    }
 
 }
