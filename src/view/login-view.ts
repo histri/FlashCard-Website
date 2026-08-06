@@ -34,7 +34,9 @@ export default class LoginView{
              <!-- <label for="Password">Password</label> -->
              <!-- <input type="text" id="Password" /> -->
               <button>Add Account</button>
+              <button id = "closeBtn">Close</button>
         `;
+
         this.#logInDialog.innerHTML = `
             <h2>Log into an Account</h2>
            <span id="error"></span><br />
@@ -43,20 +45,39 @@ export default class LoginView{
          <!--  <label for="Password">Password</label> -->
           <!-- <input type="text" id="Password" /> -->
           <button>Enter</button>
+          <button id = "closeBtn">Close</button>
         `
 
         // only open the relevant dialog when chosen
         this.#choiceDiv.querySelector("#showCreate")!
             .addEventListener("click", () => {
                 this.#logInDialog.close();
-                this.#createAccountDialog.show();
+                this.#createAccountDialog.showModal();
             });
+
 
         this.#choiceDiv.querySelector("#showLogin")!
             .addEventListener("click", () => {
                 this.#createAccountDialog.close();
-                this.#logInDialog.show();
+                this.#logInDialog.showModal();
             });
+
+        //Close the dialogs
+        this.#createAccountDialog.querySelector("#closeBtn")!
+            .addEventListener("click", () => {
+                this.#createAccountDialog.close();
+                //remove the text the user might have entered before clicking close
+                this.#createAccountDialog.querySelector<HTMLInputElement>("#nickname")!.value = "";
+            });
+
+        this.#logInDialog.querySelector("#closeBtn")!
+            .addEventListener("click", () => {
+                this.#logInDialog.close();
+                //remove the text the user might have entered before clicking close
+                this.#logInDialog.querySelector<HTMLInputElement>("#nickname")!.value = "";
+            });
+
+        //Tie functionality to user dialog
         this.#createAccountDialog.querySelector("button")!
             .addEventListener("click", () => this.#addUser());
         // add to the page:
