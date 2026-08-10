@@ -1,5 +1,5 @@
-
-//need controller and model
+//NoteView - this is user view once the user 'logs' in, from this view the user can manage their decks
+//      the user can add and delete decks, view what decks they have and the basic info about them, enter a specific's decks view
 //This view implements the listener interface
 import NotebookController from "../controller/notebook-controller.ts";
 import type NoteBook from "../model/NoteBook.ts";
@@ -20,6 +20,7 @@ export default class NoteView {
         //tie controller and model object to this specific view
         this.#note = note;
         this.#controller = controller;
+        //register this deck as a listener to the note
         this.#note.registerListener(this);
 
         this.#root = document.createElement("div");

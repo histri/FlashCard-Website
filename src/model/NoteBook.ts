@@ -17,7 +17,7 @@ export  default class NoteBook {
    // #numOfDecks: number;      //just size of the deck array
     #listeners: Array<Listener>;    //listeners listen to the updates on this domain class
 
-    private constructor(name: string, idExists?: number, deckExists?: Array<Deck>, listenerExists?: Array<Listener> ) {
+    private constructor(name: string, idExists?: number, deckExists?: Array<Deck>) {
         //deck will always have a name given as a parameter
         this.#name = name;
         //if the user wasn't defined
@@ -31,7 +31,7 @@ export  default class NoteBook {
             //Adding '!' since we know this will be assinged to object
             this.#id = idExists!;
             this.#decks = deckExists!;
-            this.#listeners = listenerExists!;
+            this.#listeners =  new Array<Listener>();
             this.#checkNoteBook();
         }
 
@@ -220,9 +220,9 @@ export  default class NoteBook {
         const decks: Array<Deck> = await Deck.loadDecksForNoteBook(id);
 
         // Listeners are runtime-only, never persisted — always start empty on load
-        const listeners: Array<Listener> = new Array<Listener>();
 
-        noteBook = new NoteBook(name, id,  decks, listeners);
+
+        noteBook = new NoteBook(name, id,  decks);
 
         return noteBook;
 

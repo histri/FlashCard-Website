@@ -37,6 +37,10 @@ export default class NotebookController {
         this.#notebook = n;
         this.#userView.hide();
         this.#notebookView = new NoteView(n, this);
+        //Since listeners are assigned at run time need to go through each deck, and register the notebook view as a listener to it
+        for(let deck of this.#notebook?.decks) {
+            this.#notebookView?.listenToDeck(deck);
+        }
     }
 
 
