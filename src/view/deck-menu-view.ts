@@ -74,7 +74,20 @@ export default class deckMenuView {
             const titleEl = document.createElement("h3");
             titleEl.className = "deck-title";
             titleEl.textContent = card.titleSide;        //should be a bit safer?
-            //Maybe preview should have the info side also
+
+            //small easter egg
+            if(card.titleSide === "cat"){
+                let img = document.createElement("img");
+
+                img.src = `${import.meta.env.BASE_URL}catv3.png`;           //set the image source as the public URL of the website + the actual image location
+                    //  becomes /FlashCard-Website/catv3.png -> this initself would work too but creates problems when website url gets changed
+                img.alt = "Cat";
+                /*some CSS properites for the image*/
+                img.style.width = "100px";
+                img.style.height = "100px";
+                img.style.imageRendering = "pixelated";     //sets image scaling algorithm, set to pixelated so that it doesn't try to smooth out the cat pic
+                cardEl.appendChild(img);
+            }
 
             cardEl.append(titleEl);
             this.#cardsEl.appendChild(cardEl);
