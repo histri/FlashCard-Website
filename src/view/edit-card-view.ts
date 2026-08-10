@@ -62,6 +62,14 @@ export default class EditCardView  {
         this.#editCardDialog.querySelector("#saveCardBtn")!.
         addEventListener("click", () => {this.#editCard();});
 
+        //pressing enter also saves the changes for card
+        this.#editCardDialog.querySelector<HTMLInputElement>("#edit-title")!.
+        addEventListener("keydown", (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                this.#editCard();
+            }
+        });
+
         this.#editCardDialog.querySelector("#closeBtn")!.
         addEventListener("click", () => {this.#closeEditDialog();});
         document.body.appendChild(this.#selectCardDialog);

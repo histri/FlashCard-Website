@@ -1,7 +1,7 @@
 import Deck from "./Deck.ts";
 import type Listener from "./Listener.ts";
 import {supabase} from "../supabaseClient.ts";
-import {UserExistsException} from "./exceptions.ts";
+import {DuplicateException, UserExistsException} from "./exceptions.ts";
 //Main Domain class in the current hierarchy NoteBook > Deck > Cards
 
 
@@ -90,11 +90,30 @@ export  default class NoteBook {
 
     //Let user add a new deck to their notebook
     //TODO maybe make it return a boolean for success
-    addDeck(deck: Deck): void {
+    async addDeck(deckName: string): Promise<Deck> {
+
+        //Check if the deck already exists (by name)
+        if(this.#isDeckDuplicate(deckName)){
+            throw new DuplicateException();
+        }
+
+        let deck = await Deck.build(deckName,this.#id!);
         this.#decks.push(deck);
-        NoteBook.saveNote(this);
+        await NoteBook.saveNote(this);
         //notify the listeners that the domain class has changed
         this.#notifyAll();
+        return deck;
+    }
+
+    //isDeckDuplicate() Private helper to check whether a created card has a duplicate name to one that is already in the list
+    #isDeckDuplicate(newTitle:string): boolean {
+        let found: boolean = false;
+        for(let i = 0; i < this.#decks.length; i++){
+            if(this.#decks.at(i)?.name === newTitle){
+                found = true;
+            }
+        }
+        return found;
     }
 
     // deleteDeck(deck: Deck): void {

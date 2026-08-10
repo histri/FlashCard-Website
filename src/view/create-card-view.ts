@@ -29,6 +29,15 @@ export default class createCardView {
         //Submit input
         this.#dialog.querySelector("#addCardBtn")!.
             addEventListener("click", () => {this.#addCard()});
+
+        //Pressing enter also submits input - only in card name (card info might want to use enter as a paragraph break)
+        this.#dialog.querySelector<HTMLInputElement>("#card-title")!.
+        addEventListener("keydown", (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                this.#addCard();
+            }
+        });
+
         //Close the dialog
         this.#dialog.querySelector("#closeBtn")!.addEventListener("click", () => {
                 console.log("Pressed the close button");

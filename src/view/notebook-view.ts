@@ -3,7 +3,7 @@
 //This view implements the listener interface
 import NotebookController from "../controller/notebook-controller.ts";
 import type NoteBook from "../model/NoteBook.ts";
-import {InvalidNameException} from "../model/exceptions.ts";
+import {DuplicateException, InvalidNameException} from "../model/exceptions.ts";
 import type Deck from "../model/Deck.ts";
 
 export default class NoteView {
@@ -60,6 +60,15 @@ export default class NoteView {
         //Submit input
         this.#addDeckDialog.querySelector("#addDeckBtn")!.
         addEventListener("click", () => {this.#addDeck()});
+        //Submit input on enter as well
+        //https://stackoverflow.com/questions/155188/trigger-a-button-click-with-javascript-on-the-enter-key-in-a-text-box
+        this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!.
+        addEventListener("keydown", (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                this.#addDeck();
+            }
+        });
+
         //Close the dialog
         this.#addDeckDialog.querySelector("#closeDeckBtn")!.
         addEventListener("click", () => {
@@ -124,13 +133,13 @@ export default class NoteView {
         this.#root.style.display = "none";
     }
 
-    #addDeck(){
+    async #addDeck() :Promise<void> {
 
         let name = this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!.value;
         //trim the spaces around the name of deck
         name = name.trim();
         try{
-            this.#controller.addDeck(name);
+            await this.#controller.addDeck(name);
             //assuming success remove the dialog from the page
             //TODO if a user hits an invalid name, closes, reopens,
             // the old error message will still be there until they fail again.
@@ -143,6 +152,11 @@ export default class NoteView {
                     .setAttribute('style', 'border-color:red;');
                 this.#addDeckDialog.querySelector("#error")!
                     .textContent = "Invalid name, names must have at least one letter (e.g., Bio).";
+            }else if (e instanceof DuplicateException){
+                this.#addDeckDialog.querySelector<HTMLInputElement>("#deck-name")!
+                    .setAttribute('style', 'border-color:red;');
+                this.#addDeckDialog.querySelector("#error")!
+                    .textContent = "Invalid name, a deck with that name already exists";
             }else{
                 console.log("Unexpected error");
             }

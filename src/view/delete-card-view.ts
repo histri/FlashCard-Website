@@ -27,6 +27,15 @@ export default class deleteCardView {
         //Submit input
         this.#dialog.querySelector("#deleteCardBtn")!.
         addEventListener("click", () => {this.#deleteCard();});
+
+        //Pressing enter also submits input
+        this.#dialog.querySelector<HTMLInputElement>("#card-title")!.
+        addEventListener("keydown", (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                this.#deleteCard();
+            }
+        });
+
         //Close the dialog
         this.#dialog.querySelector("#closeBtn")!.addEventListener("click", () => {
             //remove the text the user might have entered before clicking close

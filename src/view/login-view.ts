@@ -85,6 +85,21 @@ export default class LoginView{
         this.#logInDialog.querySelector("button")!
             .addEventListener("click", () => this.#logInUser());
 
+        //Pressing enter when typing in dialog does the same thing as clicking the create/log in button
+        this.#createAccountDialog.querySelector<HTMLInputElement>("#nickname")!.
+        addEventListener("keydown", (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                this.#addUser();
+            }
+        });
+
+        this.#logInDialog.querySelector<HTMLInputElement>("#nickname")!.
+        addEventListener("keydown", (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                this.#logInUser();
+            }
+        });
+
         this.#root.append(this.#choiceDiv, this.#createAccountDialog, this.#logInDialog);
         document.querySelector("#app")!.appendChild(this.#root);
     }

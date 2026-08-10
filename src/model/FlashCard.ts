@@ -154,7 +154,9 @@ export default class FlashCard {
 
     static async editCard(card :FlashCard): Promise<void> {
         //Just in case card was never given an ID(saved to the DB) do an early return
+        //TODO I see a potential risk when a user creates a card and immediately tries to edit it before it is save by DB
         if(card.id === undefined){
+            console.log("tried editing a deck that wasn't saved to DB");
             return;
         }
         /*      Something like this

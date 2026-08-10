@@ -47,8 +47,8 @@ export default class NotebookController {
     //Adds a new deck to the current notebook
     //Decks hold flashcards, currently decks property is only its name
     async addDeck(deckName: string): Promise<void> {
-        let deck = await Deck.build(deckName,this.#notebook!.id!);
-        this.#notebook!.addDeck(deck);
+
+        let deck = await this.#notebook!.addDeck(deckName);
         this.#notebookView!.listenToDeck(deck);
     }
 
