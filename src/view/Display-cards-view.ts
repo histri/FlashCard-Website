@@ -44,7 +44,8 @@ export default class DisplayCardsView {
                 <!--Would be cool to have a progress tracker at the top-->
             </div>
             
-            <div class = "flashcard" id = "flashcard">
+            <!--Role = button -> defines container as a clickable button, tell the browser to treat it as a button-->
+            <div class = "flashcard" id = "flashcard" tabindex="0" role="button" aria-label="Flashcard, click or press Enter to flip">
                 <div class="flashcard-inner">
                         <!-- class for CSS, id for queorying the element for a variable -->
                         <div class="flashcard-face front" id="card-front"></div>
@@ -80,6 +81,10 @@ export default class DisplayCardsView {
 
         this.#nextBtn.addEventListener("click", () => this.#showNextCard());
         this.#prevBtn.addEventListener("click", () => this.#showPrevCard());
+
+        //Flip functionality on the card itself
+        this.#flashcardEl.addEventListener("click", () => this.#flipCard());
+
 
         this.#renderCurrentCard();
     }
