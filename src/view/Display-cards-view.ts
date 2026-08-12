@@ -83,8 +83,17 @@ export default class DisplayCardsView {
         this.#prevBtn.addEventListener("click", () => this.#showPrevCard());
 
         //Flip functionality on the card itself
+        //for clicking the card
         this.#flashcardEl.addEventListener("click", () => this.#flipCard());
 
+        //For pressing enter or space on the card
+
+        this.#flashcardEl.addEventListener("keydown", (event: KeyboardEvent) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                this.#flipCard();
+            }
+        });
 
         this.#renderCurrentCard();
     }
@@ -117,11 +126,10 @@ export default class DisplayCardsView {
 
         //now change the visibility of the elements
         this.#flipped = false;
-        //make the backside invisible, since its visible by default toggling it make it the opposite
-        //Attach the class that will make an element visible
-        this.#frontEl.classList.add("visible");
-        //this will reset the back to be invisible when we go to the next card
-        this.#backEl.classList.remove("visible");
+
+        //New version of flip - both faces are always in the dom, the flipped class drives teh CSS rotation that reveals either face
+        //resetting to a new card is now just removing the class
+        this.#flashcardEl.classList.remove("flipped");
 
         this.#updateNavButtons();
     }
@@ -135,10 +143,11 @@ export default class DisplayCardsView {
     //"Flips" the card to show the opposite side (Title/Info) and vice versa
     #flipCard(): void {
         this.#flipped = !this.#flipped;
-        //toggle removes class "visible" if html element has it, or adds it if the element does have it. this.#flipped acts the condition on whether to apply the toggle at all
-        //Attach the class that will make an element visible
-        this.#frontEl.classList.toggle("visible", !this.#flipped);
-        this.#backEl.classList.toggle("visible", this.#flipped);
+
+        //New version of flip card use toggle (on if off, off if on)
+        //https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle
+        this.#flashcardEl.classList.toggle("flipped", this.#flipped);
+
     }
 
     //Shows the next card in the deck

@@ -21,8 +21,7 @@ button:active {
  */
 .deck-card {
     position: relative;
-    background: #ffffff;
-    border: 1px solid #32a1ce;
+    border: hotpink 1px solid;
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 15px;
@@ -106,28 +105,56 @@ TypeScript controls when those classes are added or removed*/
     max-width: 700px;
     height: 300px;
     margin: 10px auto;         /* centers itself within its parent */
-    padding: 25px;
+    padding: 5px;
     border: 5px solid black;
     border-radius: 12px;
-    background-image: linear-gradient(
-            45deg,
-            rebeccapurple,
-            magenta,
-            deeppink
-    );
+    /*https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/perspective*/
+    perspective: 1200px;            /*gives the rotation a 3d feel -> perspective should go on parent of rotating element*/
+    background: black;              /*what is shown (very shortly) halfway through the spin*/
     opacity: 1;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/*Default for both sides the start of as invisible*/
-.flashcard-face {
-    display: none;
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    /*https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/transform-style*/
+    transform-style: preserve-3d;           /*front/back children keep their own position in 3d space instead of being flattened to the plane of hte parent */
 }
 
-/*any item with this class becomes visible*/
+.flashcard.flipped .flashcard-inner {
+    transform: rotateX(180deg);
+}
 
-.flashcard-face.visible {
-    display: flex;
+/*Default for both sides the start of as invisible*/
+/*face describes teh physical side of the flashcard*/
+.flashcard-face {
+    position: absolute;     /*front and back faces stack directly on each other instead of one after another "flip doesnt work other wise"*/
+    top: 0; left: 0;        /*both front and back start in the exact same spot*/
+    width: 100%;            /*fills the entire space of its parent*/
+    height: 100%;
+    display: flex;              /*center the text inside the card*/
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    box-sizing: border-box;         /*padding included in the size calculation of the box =*/
+    border-radius: 8px;             /*round the corners*/
+    backface-visibility: hidden;        /*Hide a face of the card once it is rotated 90degrees from user*/
+    -webkit-backface-visibility: hidden;        /*makes it work with older browsers*/
+    color: black;                           /*text colour*/
+    text-align: center;                     /*centers the text within its own box*/
+}
+
+/*add a background to each side of the flashcard*/
+.flashcard-face.front {
+    background-image: linear-gradient(45deg, rebeccapurple, magenta, deeppink);
+}
+
+.flashcard-face.back {
+    background-image: linear-gradient(45deg, deeppink, magenta, rebeccapurple);
+    transform: rotateX(180deg);
 }
 
 input{
