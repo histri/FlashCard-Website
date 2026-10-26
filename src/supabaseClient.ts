@@ -3,7 +3,7 @@
 // so it survives page refreshes. It does NOT sync between browsers or laptops.
 
 type Row = Record<string, any>;
-type Result = { data: Row[] | null; error: null };
+type Result = { data: Row[]; error: null } | { data: null; error: { message: string } };
 
 const STORAGE_KEY = "flashcard-app-db";
 

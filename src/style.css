@@ -5,9 +5,9 @@
 
 /* Stardew-style colours, change them here and everything below updates */
 :root {
-    --page-bg:  #fec16c;         /* main page background */
+    --page-bg:  #ffca71 ;         /* main page background */
     --btn-text: #56160C;        /* dark brown: text */
-    --btn-fill:    #fc9500;    /* button and deck box background */
+    --btn-fill:   #fc9500;    /* button and deck box background */
     --btn-outline: #e07a00;     /* border and hard shadow */
 }
 
