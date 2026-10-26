@@ -3,6 +3,19 @@
    look into that*/
 /*General Stuff */
 
+/* Stardew-style colours, change them here and everything below updates */
+:root {
+    --page-bg:  #fec16c;         /* main page background */
+    --btn-text: #56160C;        /* dark brown: text */
+    --btn-fill:    #fc9500;    /* button and deck box background */
+    --btn-outline: #e07a00;     /* border and hard shadow */
+}
+
+body {
+    background-color: var(--page-bg);
+    color: var(--btn-text);
+}
+
 /* Universal font stack with fallbacks */
 body, h1, h2, h3, button, input, textarea {
     font-family: Verdana, Arial, sans-serif;
@@ -16,17 +29,28 @@ button:active {
     transform: scale(0.98);
 }
 
+/* Keep keyboard focus visible */
+button:focus-visible {
+    outline: 3px solid var(--btn-text);
+    outline-offset: 2px;
+}
+
 /*
     NOTEBOOK - MENU
  */
 .deck-card {
     position: relative;
-    border: hotpink 1px solid;
-    border-radius: 12px;
+    background-color: var(--btn-fill);
+    border: 3px solid var(--btn-outline);
+    border-radius: 0;                           /* sharp corners */
     padding: 24px;
     margin-bottom: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 3px 0 var(--btn-outline);     /* hard edge, no blur */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.deck-card:hover {
+    filter: brightness(1.08);
 }
 
 .deck-card .study-btn {
@@ -39,6 +63,8 @@ button:active {
     /* Hide the native button styling completely */
     background: transparent;
     border: none;
+    border-radius: 0;
+    box-shadow: none;
     cursor: pointer;
 
     /* Hide the text or format it visually if you want */
@@ -47,11 +73,11 @@ button:active {
 }
 .deck-title {
     margin: 0 0 8px 0;
-    color: #333;
+    color: var(--btn-text);
 }
 .deck-count {
     margin: 0;
-    color: #666;
+    color: var(--btn-text);
 }
 
 /*
@@ -65,7 +91,6 @@ button:active {
 
 .deck-button-row button{
     flex: 1;
-    background-color: hotpink;
     padding: 8px 0;
 }
 
@@ -73,6 +98,11 @@ button {
   font-size: 1.2rem;
   padding: 5px 15px;
     cursor: pointer;
+    background-color: var(--btn-fill);
+    color: var(--btn-text);
+    border: 3px solid var(--btn-outline);
+    border-radius: 0;                           /* sharp corners */
+    box-shadow: 0 3px 0 var(--btn-outline);     /* hard edge, no blur */
 }
 
 
@@ -210,6 +240,3 @@ textarea {
 #EditCardDialog[open] {
     display: flex;
 }
-
-
-
